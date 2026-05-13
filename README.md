@@ -43,6 +43,8 @@ se relaciona com o código ao longo do tempo:
 
 > Para análise detalhada de prós, contras e quando usar cada nível, veja [NIVEL-SDD.md](NIVEL-SDD.md).
 
+> Para entender como a LLM agrega contexto, os riscos da context window e como o framework se integra com diferentes harnesses de IDE, veja [LLM-CONTEXT.md](LLM-CONTEXT.md).
+
 ### Por que spec-first?
 
 - **Sem overhead de manutenção**: a spec tem vida curta — guia a implementação e é descartada. Não há risco de spec desatualizada.
