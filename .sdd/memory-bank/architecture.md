@@ -37,7 +37,7 @@ C4Context
     System(sistema, "[Nome do Sistema]", "[O que este sistema faz — uma linha]")
   }
 
-  System_Ext(ext1, "[Dependência Externa 1]", "[ex: Azure AD — provedor de identidade]")
+  System_Ext(ext1, "[Dependência Externa 1]", "[ex: AD — provedor de identidade]")
   System_Ext(ext2, "[Dependência Externa 2]", "[ex: gateway de pagamento, ERP, CRM]")
   System_Ext(apm,  "Monitor", "Telemetria e observabilidade")
 
@@ -90,7 +90,7 @@ C4Container
 
   }
 
-  System_Ext(ext1, "[Sistema Externo]", "[ex: provedor de identidade — Azure AD]")
+  System_Ext(ext1, "[Sistema Externo]", "[ex: provedor de identidade — AD]")
   System_Ext(apm,  "Monitor", "Telemetria e observabilidade")
 
   Rel(p1,   app1, "[ação]",        "[ex: HTTPS / browser]")
@@ -131,7 +131,7 @@ C4Container
 - [PREENCHER — ex: resultado tipado, exceções vs. códigos de erro, circuit breaker]
 
 ### Autenticação / Autorização
-- [PREENCHER — ex: OAuth 2.0 + Azure AD, API Keys, RBAC]
+- [PREENCHER — ex: OAuth 2.0 + AD, API Keys, RBAC]
 
 ### Persistência
 - [PREENCHER — ex: bancos de dados utilizados, padrão de acesso (Repository, ORM)]
@@ -162,5 +162,5 @@ C4Container
 
 | Dependência              | Propósito                          | Versão / Tier    |
 |--------------------------|------------------------------------|------------------|
-| Azure Monitor SDK        | Telemetria Application Performance Monitor                     | Última estável   |
+| APM SDK        | Telemetria Application Performance Monitor                     | Última estável   |
 | [PREENCHER]              | [PREENCHER]                        | [PREENCHER]      |

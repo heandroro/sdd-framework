@@ -2,7 +2,7 @@
 
 > **Instrução para IA**: Este documento define os padrões conceituais de
 > Application Performance Monitor para este projeto, alinhados ao modelo
-> de observabilidade da Microsoft (Azure Monitor / Application Insights).
+> de observabilidade.
 > Todo `design.md` de spec deve seguir estes padrões na seção de Application Performance Monitor.
 
 ---

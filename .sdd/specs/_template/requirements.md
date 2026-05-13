@@ -84,7 +84,7 @@
 |------------------|----------------------------------------------------|--------------|
 | Performance      | [PREENCHER — ex: p95 < 300ms]                      | Alta         |
 | Disponibilidade  | [PREENCHER — ex: 99.9% uptime]                     | Alta         |
-| Segurança        | [PREENCHER — ex: autenticado via Azure AD]         | Alta         |
+| Segurança        | [PREENCHER — ex: autenticado via AD]               | Alta         |
 | Escalabilidade   | [PREENCHER — ex: suportar 1000 req/s]              | Média        |
 
 ---
