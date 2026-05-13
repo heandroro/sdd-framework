@@ -96,17 +96,17 @@ projeto/
 │
 ├── .apm/                              ← Fonte dos primitivos de agente (APM CLI)
 │   ├── instructions/
-│   │   └── <nome>.instructions.md     ← Regras por glob de arquivos (PKG-Ix)
+│   │   └── <nome>.instructions.md     ← Regras aplicadas por glob de arquivos
 │   ├── prompts/
-│   │   └── <nome>.prompt.md           ← Comandos invocados pelo usuário (PKG-Px)
+│   │   └── <nome>.prompt.md           ← Comandos invocados pelo usuário
 │   ├── agents/
-│   │   └── <nome>.agent.md            ← Personas @nome especializadas (PKG-Ax)
+│   │   └── <nome>.agent.md            ← Personas @nome especializadas
 │   ├── skills/
 │   │   └── <nome>/
-│   │       ├── SKILL.md               ← Guia consultado automaticamente (PKG-Sx)
+│   │       ├── SKILL.md               ← Guia consultado automaticamente pelo agente
 │   │       └── references/            ← Conteúdo longo extraído do body
 │   └── hooks/
-│       └── <nome>.json                ← Callbacks PreToolUse/PostToolUse (PKG-Hx)
+│       └── <nome>.json                ← Callbacks PreToolUse/PostToolUse
 │
 ├── .sdd/                              ← Framework SDD (spec-first)
 │   ├── memory-bank/                   ← Contexto persistente (todas as tasks)
@@ -133,7 +133,7 @@ projeto/
 │           └── agent-context.md       ← Se a feature produz primitivos de agente
 │
 ├── AGENTS.md                          ← Auto-descoberto por agentes de IA (deve estar na raiz)
-├── apm.yml                            ← Manifesto do pacote APM CLI (PKG-Mx aqui)
+├── apm.yml                            ← Manifesto do pacote APM CLI
 │
 └── src/                               ← Código da aplicação
     └── ...
