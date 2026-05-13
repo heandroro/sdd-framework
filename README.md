@@ -6,15 +6,63 @@
 
 ---
 
-## O que é este framework?
+## O que é Spec-Driven Development (SDD)?
 
-Este framework é uma estrutura **agnóstica de tecnologia** para praticar
-**Spec-Driven Development (SDD)** com nível **spec-first**, onde:
+### O problema
 
-1. Uma spec estruturada é escrita *antes* do código.
-2. A spec se torna a fonte de verdade para humanos e agentes de IA.
-3. Cada spec define explicitamente seus **requisitos de observabilidade** (Application Performance Monitor).
-4. A spec é descartada após a conclusão da task, mas o memory bank persiste.
+Quando times usam IA para escrever código sem um contexto estruturado, o resultado tende a divergir:
+o agente toma decisões que contradizem a arquitetura existente, ignora requisitos não-óbvios e
+produz código tecnicamente correto mas funcionalmente errado. A revisão humana torna-se cara
+porque o problema só aparece tarde — no código gerado.
+
+### A solução
+
+**Spec-Driven Development** é uma abordagem onde uma _spec_ (especificação estruturada) é
+escrita e aprovada **antes** do código existir. A spec funciona como um **contrato explícito
+entre o humano e o agente de IA**: define o que deve ser construído, como deve se comportar,
+e como será observado em produção.
+
+A ideia central é simples:
+
+> *Escreva o que você quer antes de escrever o como.*
+
+Com a spec em mãos, o agente de IA tem contexto suficiente para implementar com fidelidade.
+O humano revisa intenção, não linha de código. Erros de interpretação são detectados na spec
+— antes de qualquer código existir.
+
+### Os três níveis de SDD
+
+SDD não é binário. Birgitta Böckeler identifica três níveis, que diferem em como a spec
+se relaciona com o código ao longo do tempo:
+
+| Nível | Fluxo | Spec após entrega | Adequado para |
+|-------|-------|-------------------|---------------|
+| **Spec-First** ← *este framework* | Spec → Código | Descartada (conhecimento vai para o memory bank) | Times ágeis, features de médio porte |
+| **Spec-Anchored** | Spec → Código | Mantida como artefato vivo, atualizada a cada mudança | APIs públicas, sistemas regulados |
+| **Spec-as-Source** | Spec → Código (IA autônoma) | A spec **é** o código | Scaffolding, boilerplate, prototipagem |
+
+> Para análise detalhada de prós, contras e quando usar cada nível, veja [NIVEL-SDD.md](NIVEL-SDD.md).
+
+### Por que spec-first?
+
+- **Sem overhead de manutenção**: a spec tem vida curta — guia a implementação e é descartada. Não há risco de spec desatualizada.
+- **Compatível com cadência ágil**: um ciclo completo (requirements → design → tasks → entrega) cabe em uma sprint.
+- **Memory bank substitui a spec permanente**: o conhecimento que tem valor a longo prazo (decisões arquiteturais, padrões, contexto de produto) é promovido para arquivos persistentes — sem duplicação com o código.
+- **Controle humano incremental**: aprovação explícita em cada etapa sem exigir revisão de cada linha gerada.
+
+---
+
+## O que este framework entrega
+
+Este framework é uma estrutura **agnóstica de tecnologia** para praticar SDD com nível
+**spec-first**. Além do ciclo básico de spec, o framework inclui:
+
+| Componente | O que é | Onde vive |
+|---|---|---|
+| **Memory Bank** | Contexto permanente do projeto lido pelo agente no início de toda sessão | `.sdd/memory-bank/` |
+| **Ciclo SDD** | Templates e fluxo para requirements → design → tasks com aprovação humana | `.sdd/specs/` |
+| **Observabilidade obrigatória** | Cada spec define explicitamente métricas, traces, alertas e dashboards | Seções APM-x em `design.md` |
+| **Agent Package Manager (APM CLI)** | Ciclo independente para empacotar instruções, prompts e skills para o agente | `.apm/` + `apm.yml` |
 
 ---
 
@@ -38,31 +86,10 @@ está sendo trabalhada.
 
 ---
 
-## Níveis de SDD (conforme o artigo)
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  NÍVEL          │ CRIAÇÃO             │ EVOLUÇÃO/MANUTENÇÃO          │
-├─────────────────────────────────────────────────────────────────────┤
-│  Spec-first     │ Spec → Código       │ Nova spec por mudança        │
-│  ← ADOTADO      │ (humano + IA)       │ Spec anterior descartada     │
-├─────────────────────────────────────────────────────────────────────┤
-│  Spec-anchored  │ Spec → Código       │ Spec editada (artefato vivo) │
-├─────────────────────────────────────────────────────────────────────┤
-│  Spec-as-source │ Spec → Código (IA)  │ Humano nunca toca no código  │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-Este framework adota **spec-first**. A spec guia a implementação de uma task/story
-e pode ser descartada após a entrega. O memory bank, no entanto, é mantido vivo.
-
----
-
 ## Estrutura de pastas
 
-> Árvore completa esperada em um projeto que adota SDD + Application Performance Monitor (observabilidade)
-> + Agent Package Manager (APM CLI) (contexto de agente). A pasta `.apm/` é mantida pelo ciclo Agent Context,
-> independente do ciclo SDD.
+> Árvore completa esperada em um projeto que adota SDD + APM CLI(Agent Package Manager)
+> A pasta `.apm/` é mantida pelo ciclo Agent Package Manager, independente do ciclo SDD.
 
 ```
 projeto/
