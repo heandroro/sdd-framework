@@ -53,7 +53,7 @@
 
 ---
 
-## Requisitos de Observabilidade (APM) `[IA]`
+## Requisitos de Observabilidade (Application Performance Monitor) `[IA]`
 
 > Defina aqui **o que** deve ser observável, não **como** implementar.
 > O design da instrumentação fica em `design.md`.

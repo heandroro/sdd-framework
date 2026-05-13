@@ -175,7 +175,7 @@ description: "[O que este pacote entrega ao agente]"
 
 dependencies:
   apm:
-    - "[org/pacote@versão]"  # outros pacotes APM necessários (remover se não houver)
+    - "[org/pacote@versão]"  # outros pacotes APM CLI necessários (remover se não houver)
 
   mcp:
     # [PKG-M1] — registry

@@ -36,12 +36,12 @@
 
 ---
 
-## KPIs de Negócio (Vinculados a APM)
+## KPIs de Negócio (Vinculados a Application Performance Monitor)
 
-> Estes KPIs devem ser observáveis via Microsoft APM. Cada spec nova deve
+> Estes KPIs devem ser observáveis via Application Performance Monitor. Cada spec nova deve
 > considerar o impacto em pelo menos um destes indicadores.
 
-| KPI                     | Métrica APM Relacionada           | Meta         |
+| KPI                     | Métrica Application Performance Monitor Relacionada | Meta         |
 |-------------------------|-----------------------------------|--------------|
 | [PREENCHER]             | [PREENCHER]                       | [PREENCHER]  |
 

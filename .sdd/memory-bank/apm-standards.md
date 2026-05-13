@@ -1,9 +1,9 @@
-# APM Standards — Padrões Microsoft APM
+# APM Standards — Padrões Application Performance Monitor
 
 > **Instrução para IA**: Este documento define os padrões conceituais de
-> Application Performance Monitoring para este projeto, alinhados ao modelo
+> Application Performance Monitor para este projeto, alinhados ao modelo
 > de observabilidade da Microsoft (Azure Monitor / Application Insights).
-> Todo `design.md` de spec deve seguir estes padrões na seção de APM.
+> Todo `design.md` de spec deve seguir estes padrões na seção de Application Performance Monitor.
 
 ---
 
@@ -14,7 +14,7 @@ Microsoft:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                  MICROSOFT APM — TRÊS PILARES                │
+│     MICROSOFT APPLICATION PERFORMANCE MONITOR — TRÊS PILARES         │
 ├──────────────┬──────────────────┬────────────────────────────┤
 │   LOGS       │   MÉTRICAS       │   TRACES                   │
 │ (Traces      │ (Metrics)        │ (Distributed Tracing)      │
@@ -93,7 +93,7 @@ Toda operação que atravessa limites de serviço deve propagar um **Trace Conte
 
 ### 4. Custom Events (Eventos de Negócio)
 
-Eventos de negócio relevantes devem ser capturados como **custom events** no APM.
+Eventos de negócio relevantes devem ser capturados como **custom events** no Application Performance Monitor.
 Estes diferem de logs operacionais — capturam fatos de domínio para análise
 de comportamento e uso.
 

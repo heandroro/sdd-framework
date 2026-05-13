@@ -10,8 +10,8 @@
 
 | Contexto              | Convenção             | Exemplo                         |
 |-----------------------|-----------------------|---------------------------------|
-| Métricas APM          | snake_case com pontos | `orders.checkout.duration_ms`   |
-| Custom Events APM     | PascalCase            | `OrderPlaced`                   |
+| Métricas Application Performance Monitor | snake_case com pontos | `orders.checkout.duration_ms`   |
+| Custom Events Application Performance Monitor     | PascalCase            | `OrderPlaced`                   |
 | IDs de Requisito      | REQ-x.x               | `REQ-1.1`                       |
 | IDs de APM Design     | APM-Mx / APM-Ex       | `APM-M1`, `APM-E2`              |
 | IDs de Alertas        | ALT-xx                | `ALT-01`                        |
@@ -41,7 +41,7 @@ _Nenhum padrão emergente documentado ainda._
 
 ## FAQs para Agentes
 
-**Q: Posso pular as tasks de APM se o humano não as mencionar?**
+**Q: Posso pular as tasks de Application Performance Monitor se o humano não as mencionar?**
 A: Não. As tasks T-APM-xx são obrigatórias pela constitution.md.
 
 **Q: O que fazer se requirements.md tiver detalhes técnicos?**

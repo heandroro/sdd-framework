@@ -166,7 +166,7 @@ Esquema:
 
 ---
 
-## APM / Observability Design `[IA]`
+## Application Performance Monitor / Observability Design `[IA]`
 
 > **Esta seção é obrigatória** (constitution.md, Princípio 1).
 > Para cada item, referencie o requisito de observabilidade correspondente
@@ -278,7 +278,7 @@ block-beta
 ```
 [ ] Alinhado com architecture.md (estilo arquitetural, padrões obrigatórios)
 [ ] Alinhado com apm-standards.md (nomenclatura e tipos de telemetria)
-[ ] Seção APM/Observability Design completa:
+[ ] Seção Application Performance Monitor / Observability Design completa:
     [ ] Traces definidos
     [ ] Métricas (APM-Mx) com IDs únicos
     [ ] Custom Events (APM-Ex) com IDs únicos

@@ -140,7 +140,7 @@ C4Container
 
 - Toda entrada de sistema deve gerar um trace distribuído
 - Toda operação de negócio relevante deve emitir um custom event
-- Toda exceção não tratada deve ser capturada e enviada ao APM
+- Toda exceção não tratada deve ser capturada e enviada ao Application Performance Monitor
 
 ---
 
@@ -162,5 +162,5 @@ C4Container
 
 | Dependência              | Propósito                          | Versão / Tier    |
 |--------------------------|------------------------------------|------------------|
-| Azure Monitor SDK        | Telemetria APM                     | Última estável   |
+| Azure Monitor SDK        | Telemetria Application Performance Monitor                     | Última estável   |
 | [PREENCHER]              | [PREENCHER]                        | [PREENCHER]      |

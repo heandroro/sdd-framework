@@ -12,7 +12,7 @@ Antes de qualquer ação, leia os seguintes arquivos na ordem:
 1. `.sdd/memory-bank/constitution.md` — Princípios imutáveis
 2. `.sdd/memory-bank/architecture.md` — Decisões arquiteturais
 3. `.sdd/memory-bank/product.md` — Contexto de produto
-4. `.sdd/memory-bank/apm-standards.md` — Padrões Microsoft APM
+4. `.sdd/memory-bank/apm-standards.md` — Padrões Application Performance Monitor
 
 Se algum destes arquivos não existir, informe ao humano antes de prosseguir.
 
@@ -34,8 +34,8 @@ Quando solicitado a criar/ajudar com `requirements.md`:
 Quando solicitado a criar/ajudar com `design.md`:
 1. Confirme que `requirements.md` foi aprovado pelo humano
 2. Verifique alinhamento com `architecture.md` antes de propor qualquer design
-3. Preencha **obrigatoriamente** a seção APM/Observability Design
-4. Para cada requisito OBS-x em `requirements.md`, deve existir um correspondente em APM Design
+3. Preencha **obrigatoriamente** a seção Application Performance Monitor / Observability Design
+4. Para cada requisito OBS-x em `requirements.md`, deve existir um correspondente em Application Performance Monitor Design
 5. Execute o checklist ao final e reporte qualquer item não atendido
 
 ### Etapa 3 — Tasks
@@ -44,7 +44,7 @@ Quando solicitado a criar/ajudar com `tasks.md`:
 1. Confirme que `design.md` foi aprovado pelo humano
 2. Gere tasks de implementação com rastreabilidade para REQ-x.x
 3. **Sempre inclua as tasks T-APM-01 a T-APM-05** — elas nunca são opcionais
-4. Tasks de APM devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
+4. Tasks de Application Performance Monitor devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
 5. Execute o checklist ao final
 
 ### Execução de Tasks
@@ -87,12 +87,12 @@ Reporte **imediatamente** ao humano antes de prosseguir quando:
 - Uma dependency não listada em `architecture.md` for necessária
 - A task for ambígua ou tiver múltiplas interpretações válidas
 - Um requisito de observabilidade parecer incompleto ou inconsistente
-- Um primitivo de agente (PKG-x) conflitar com primitivos já instalados por outros pacotes APM
+- Um primitivo de agente (PKG-x) conflitar com primitivos já instalados por outros pacotes APM CLI
 - Um MCP server self-defined precisar ser usado transitivamente (boundary de segurança)
 
 ---
 
-## Workflow APM CLI (Agent Context)
+## Workflow Agent Package Manager (APM CLI) (Agent Context)
 
 > Este workflow é **independente** do ciclo SDD. Pode ser iniciado em paralelo,
 > antes ou depois do ciclo `requirements → design → tasks`, dependendo da maturidade

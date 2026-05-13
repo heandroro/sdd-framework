@@ -12,10 +12,10 @@
 **Todo código que vai para produção deve ser instrumentado.**
 
 - Toda nova funcionalidade DEVE definir sua telemetria na seção
-  `## APM / Observability Design` do `design.md`.
+  `## Application Performance Monitor / Observability Design` do `design.md`.
 - Nenhuma task de implementação está completa sem a task correspondente de
-  instrumentação APM.
-- As tasks de instrumentação APM não são opcionais e não podem ser removidas
+  instrumentação Application Performance Monitor.
+- As tasks de instrumentação Application Performance Monitor não são opcionais e não podem ser removidas
   da lista de tasks.
 
 ---
@@ -41,7 +41,7 @@
 
 - Cada task em `tasks.md` deve referenciar pelo menos um requisito de
   `requirements.md` (ex: `[REQ-1.1]`).
-- Cada task de APM em `tasks.md` deve referenciar o item de telemetria
+- Cada task de Application Performance Monitor em `tasks.md` deve referenciar o item de telemetria
   correspondente em `design.md` (ex: `[APM-M1]`).
 
 ---
@@ -107,11 +107,11 @@ Ao finalizar requirements.md:
 Ao finalizar design.md:
   [ ] Alinhado com architecture.md
   [ ] Alinhado com apm-standards.md
-  [ ] Seção APM/Observability Design completa com métricas, eventos, SLOs
+  [ ] Seção Application Performance Monitor / Observability Design completa com métricas, eventos, SLOs
   [ ] Contratos de interface definidos
 
 Ao finalizar tasks.md:
   [ ] Toda task referencia pelo menos um REQ-x.x
-  [ ] Tasks de APM presentes e referenciam itens APM-xx do design.md
+  [ ] Tasks de Application Performance Monitor presentes e referenciam itens APM-xx do design.md
   [ ] Nenhuma task é excessivamente grande
 ```

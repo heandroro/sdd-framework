@@ -1,9 +1,9 @@
-# SDD Framework com Microsoft APM
+# SDD Framework com Application Performance Monitor
 
 > Baseado nos princípios de **Spec-Driven Development** explorados por Birgitta Böckeler
 > em [Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
-> (Martin Fowler, Out/2025), integrado a padrões conceituais de **Microsoft APM**
-> (Application Performance Monitoring — Azure Monitor / Application Insights).
+> (Martin Fowler, Out/2025), integrado a padrões conceituais de **Application Performance Monitor**
+> (Azure Monitor / Application Insights).
 
 ---
 
@@ -14,7 +14,7 @@ Este framework é uma estrutura **agnóstica de tecnologia** para praticar
 
 1. Uma spec estruturada é escrita *antes* do código.
 2. A spec se torna a fonte de verdade para humanos e agentes de IA.
-3. Cada spec define explicitamente seus **requisitos de observabilidade** (APM).
+3. Cada spec define explicitamente seus **requisitos de observabilidade** (Application Performance Monitor).
 4. A spec é descartada após a conclusão da task, mas o memory bank persiste.
 
 ---
@@ -61,8 +61,8 @@ e pode ser descartada após a entrega. O memory bank, no entanto, é mantido viv
 
 ## Estrutura de pastas
 
-> Árvore completa esperada em um projeto que adota SDD + APM (observabilidade)
-> + APM CLI (contexto de agente). A pasta `.apm/` é mantida pelo ciclo Agent Context,
+> Árvore completa esperada em um projeto que adota SDD + Application Performance Monitor (observabilidade)
+> + Agent Package Manager (APM CLI) (contexto de agente). A pasta `.apm/` é mantida pelo ciclo Agent Context,
 > independente do ciclo SDD.
 
 ```
@@ -87,7 +87,7 @@ projeto/
 │   │   ├── constitution.md            ← Princípios imutáveis
 │   │   ├── product.md                 ← Contexto de produto e usuários
 │   │   ├── architecture.md            ← Decisões arquiteturais
-│   │   └── apm-standards.md           ← Padrões APM (observabilidade + APM CLI)
+│   │   └── apm-standards.md           ← Padrões Application Performance Monitor (observabilidade) e APM CLI
 │   │
 │   ├── adr/                           ← Decisões arquiteturais detalhadas
 │   │   ├── _template.md               ← Template de ADR (copiar para cada decisão)
@@ -97,7 +97,7 @@ projeto/
 │       ├── _template/                 ← Templates base (copiar para cada feature)
 │       │   ├── requirements.md        ← Requisitos funcionais + observabilidade
 │       │   ├── design.md              ← Design técnico + Observability Design
-│       │   ├── tasks.md               ← Tasks de implementação + instrumentação APM
+│       │   ├── tasks.md               ← Tasks de implementação + instrumentação Application Performance Monitor
 │       │   └── agent-context.md       ← Ciclo APM CLI independente (opcional)
 │       │
 │       └── <nome-da-feature>/         ← Spec de uma feature específica
@@ -117,7 +117,7 @@ projeto/
 
 ## Fluxo de trabalho
 
-**Ciclo APM CLI** (configura o contexto do agente — independente, pode rodar em qualquer ordem):
+**Ciclo Agent Package Manager (APM CLI)** (configura o contexto do agente — independente, pode rodar em qualquer ordem):
 
 ```
  ┌──────────────────┐
@@ -157,7 +157,7 @@ projeto/
           │  Execução task-a-task com revisão incremental
           ▼
  ┌──────────────────┐
- │  4. VALIDAÇÃO    │  → APM: métricas, alertas, dashboards implementados
+ │  4. VALIDAÇÃO    │  → Application Performance Monitor: métricas, alertas, dashboards implementados
  └──────────────────┘
 ```
 
@@ -232,13 +232,13 @@ flowchart LR
 
 **O que não cruza os limites:**
 
-- Specs SDD (`requirements.md`, `design.md`, `tasks.md`) não são lidas pelo APM CLI
+- Specs SDD (`requirements.md`, `design.md`, `tasks.md`) não são lidas pelo Agent Package Manager (APM CLI)
 - Primitivos em `.apm/` não substituem o memory bank — ensinam comportamento ao agente, não capturam decisões de produto ou arquitetura
 - `apm.yml` não é um spec — é um manifesto de empacotamento, não de requisitos
 
 ---
 
-## Integração com APM (Observabilidade)
+## Integração com Application Performance Monitor (Observabilidade)
 
 Todo spec neste framework inclui uma seção de **Observability Design** que define:
 
@@ -248,7 +248,7 @@ Todo spec neste framework inclui uma seção de **Observability Design** que def
 - **Conceito de dashboard**: KPIs operacionais e de negócio visíveis para o time
 
 O framework é agnóstico de plataforma. Os padrões específicos do projeto
-(plataforma APM adotada, naming conventions, IDs) ficam centralizados em
+(plataforma Application Performance Monitor adotada, naming conventions, IDs) ficam centralizados em
 `.sdd/memory-bank/apm-standards.md`.
 
 ---
@@ -262,7 +262,7 @@ cp -r .sdd/specs/_template .sdd/specs/<nome-da-feature>
 # 1. Preencha requirements.md com a IA → Revise e aprove
 # 2. Preencha design.md com a IA → Revise e aprove
 # 3. Gere tasks.md com a IA → Execute task a task
-# 4. Ao finalizar, valide APM e descarte a spec (spec-first)
+# 4. Ao finalizar, valide Application Performance Monitor e descarte a spec (spec-first)
 
 # Ciclo APM CLI (se a feature produz primitivos de agente — independente do SDD)
 # O agent-context.md já está no template copiado acima
@@ -303,8 +303,8 @@ Passos para adotar o framework em um projeto novo:
    requirements.md → aprovação → design.md → aprovação → tasks.md → execução
 4. (Se aplicável) Ciclo APM CLI em paralelo:
    agent-context.md → PKG-1 → PKG-2 → PKG-3
-5. Valide APM antes do merge:
-   [ ] Métricas e eventos visíveis na plataforma APM
+5. Valide Application Performance Monitor antes do merge:
+   [ ] Métricas e eventos visíveis na plataforma Application Performance Monitor
    [ ] Alertas configurados e testados
    [ ] Dashboard atualizado
 6. Pull Request → Code Review → Merge
@@ -327,7 +327,7 @@ Passos para adotar o framework em um projeto novo:
 ```
 Bug simples (causa conhecida, mudança localizada):
   1. Crie a branch: git checkout -b fix/<nome>
-  2. Corrija, teste e valide que a telemetria APM existente cobre o cenário
+  2. Corrija, teste e valide que a telemetria Application Performance Monitor existente cobre o cenário
   3. Pull Request → Merge
   — Sem spec, sem ADR (a menos que a correção mude uma decisão arquitetural)
 
@@ -338,7 +338,7 @@ Bug complexo (causa desconhecida, impacto amplo):
      - Componentes afetados
      - Abordagem de correção
   3. Execute as tasks de correção
-  4. Valide com APM: verifique que o evento/trace problemático sumiu
+  4. Valide com Application Performance Monitor: verifique que o evento/trace problemático sumiu
   5. Pull Request → Merge → Descarte o mini-spec
   — Se a correção mudou uma decisão arquitetural (ex: adotou circuit breaker,
      trocou estratégia de retry), registre um ADR antes de descartar o mini-spec
@@ -356,7 +356,7 @@ Pré-deploy (checklist mínimo):
 Deploy:
   1. Merge para a branch principal
   2. Pipeline CI/CD executa testes e build
-  3. Deploy em staging → smoke test com APM aberto
+  3. Deploy em staging → smoke test com Application Performance Monitor aberto
   4. Deploy em produção → monitorar dashboard por [período definido em design.md]
 
 Pós-deploy:
@@ -463,7 +463,7 @@ derivado diretamente dos commits semânticos:
 - [Kiro](https://kiro.dev/)
 - [Tessl Framework](https://docs.tessl.io/)
 
-**Microsoft APM**
+**Application Performance Monitor**
 - [Azure Monitor — Visão geral](https://learn.microsoft.com/azure/azure-monitor/overview)
 - [Application Insights — Visão geral](https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview)
 - [Distributed Tracing](https://learn.microsoft.com/azure/azure-monitor/app/distributed-trace-data)
@@ -473,3 +473,29 @@ derivado diretamente dos commits semânticos:
 - [Dashboards no Azure Portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards)
 - [OpenTelemetry com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/opentelemetry-enable)
 - [SLOs com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/sla-report)
+
+---
+
+## Licença
+
+MIT License
+
+Copyright (c) 2026 heandroro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
