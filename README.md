@@ -1,9 +1,8 @@
-# SDD Framework com Application Performance Monitor
+# SDD Framework com Agent Package Manager
 
 > Baseado nos princípios de **Spec-Driven Development** explorados por Birgitta Böckeler
 > em [Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
-> (Martin Fowler, Out/2025), integrado a padrões conceituais de **Application Performance Monitor**
-> (Azure Monitor / Application Insights).
+> (Martin Fowler, Out/2025), integrado ao **Agent Package Manager**.
 
 ---
 
@@ -463,16 +462,10 @@ derivado diretamente dos commits semânticos:
 - [Kiro](https://kiro.dev/)
 - [Tessl Framework](https://docs.tessl.io/)
 
-**Application Performance Monitor**
-- [Azure Monitor — Visão geral](https://learn.microsoft.com/azure/azure-monitor/overview)
-- [Application Insights — Visão geral](https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview)
-- [Distributed Tracing](https://learn.microsoft.com/azure/azure-monitor/app/distributed-trace-data)
-- [Custom Metrics](https://learn.microsoft.com/azure/azure-monitor/essentials/metrics-custom-overview)
-- [Custom Events (trackEvent)](https://learn.microsoft.com/azure/azure-monitor/app/api-custom-events-metrics)
-- [Alerts — Visão geral](https://learn.microsoft.com/azure/azure-monitor/alerts/alerts-overview)
-- [Dashboards no Azure Portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards)
-- [OpenTelemetry com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/opentelemetry-enable)
-- [SLOs com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/sla-report)
+**Agent Package Manager**
+- [Agent Package Manager (APM CLI) — repositório oficial](https://github.com/microsoft/apm)
+- [Documentação de primitivos](https://github.com/microsoft/apm/blob/main/docs/primitives.md)
+- [apm.yml — referência do manifesto](https://github.com/microsoft/apm/blob/main/docs/apm-yml.md)
 
 ---
 
