@@ -1,0 +1,129 @@
+# AGENTS.md — Instruções para Agentes de IA
+
+> Este arquivo define como agentes de IA devem se comportar neste projeto.
+> Deve ser incluído automaticamente no contexto de toda sessão de coding.
+
+---
+
+## Memory Bank (Leitura obrigatória no início de toda sessão)
+
+Antes de qualquer ação, leia os seguintes arquivos na ordem:
+
+1. `.sdd/memory-bank/constitution.md` — Princípios imutáveis
+2. `.sdd/memory-bank/architecture.md` — Decisões arquiteturais
+3. `.sdd/memory-bank/product.md` — Contexto de produto
+4. `.sdd/memory-bank/apm-standards.md` — Padrões Microsoft APM
+
+Se algum destes arquivos não existir, informe ao humano antes de prosseguir.
+
+---
+
+## Workflow SDD (Spec-First)
+
+### Etapa 1 — Requirements
+
+Quando solicitado a criar/ajudar com `requirements.md`:
+1. Leia o memory bank completo
+2. Preencha os requisitos funcionais separados de técnicos
+3. Preencha os requisitos de observabilidade (seções OBS-x)
+4. **Nunca inclua decisões técnicas em requirements.md**
+5. Execute o checklist ao final e reporte qualquer item não atendido
+
+### Etapa 2 — Design
+
+Quando solicitado a criar/ajudar com `design.md`:
+1. Confirme que `requirements.md` foi aprovado pelo humano
+2. Verifique alinhamento com `architecture.md` antes de propor qualquer design
+3. Preencha **obrigatoriamente** a seção APM/Observability Design
+4. Para cada requisito OBS-x em `requirements.md`, deve existir um correspondente em APM Design
+5. Execute o checklist ao final e reporte qualquer item não atendido
+
+### Etapa 3 — Tasks
+
+Quando solicitado a criar/ajudar com `tasks.md`:
+1. Confirme que `design.md` foi aprovado pelo humano
+2. Gere tasks de implementação com rastreabilidade para REQ-x.x
+3. **Sempre inclua as tasks T-APM-01 a T-APM-05** — elas nunca são opcionais
+4. Tasks de APM devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
+5. Execute o checklist ao final
+
+### Execução de Tasks
+
+Durante a execução:
+- Execute UMA task por vez
+- Antes de iniciar uma task, confirme com o humano
+- Após completar, marque `[x]` e aguarde aprovação antes de prosseguir
+- Se uma task parecer grande, proponha subdivisão primeiro
+
+### Quando quebrar uma feature em sub-specs
+
+Proponha a divisão em sub-specs **antes de iniciar o design** quando:
+- `requirements.md` cobrir mais de 2 domínios de negócio distintos
+- A estimativa de tasks ultrapassar 10 itens
+- Componentes diferentes puderem ser entregues e testados de forma independente
+
+Cada sub-spec fica em `.sdd/specs/<feature>-<componente>/` e tem seu próprio
+ciclo SDD completo. Nunca divida tasks em múltiplos arquivos — `tasks.md` é sempre arquivo único.
+
+---
+
+## Comportamentos Proibidos
+
+- **NÃO** inclua dados PII/sensíveis em exemplos de telemetria
+- **NÃO** avance para a próxima etapa sem aprovação humana explícita
+- **NÃO** introduza dependências externas não listadas em `architecture.md`
+- **NÃO** altere contratos de interface já estabelecidos sem aprovação
+- **NÃO** pule as tasks T-APM-xx mesmo que o humano não as mencione
+- **NÃO** inclua tokens/secrets literais em exemplos de `apm.yml` — sempre usar `${VAR}`
+- **NÃO** misture detalhes técnicos em `requirements.md`
+
+---
+
+## Quando Reportar ao Humano
+
+Reporte **imediatamente** ao humano antes de prosseguir quando:
+- Houver conflito entre o spec e `constitution.md` ou `architecture.md`
+- Uma task precisar alterar um contrato de interface existente
+- Uma dependency não listada em `architecture.md` for necessária
+- A task for ambígua ou tiver múltiplas interpretações válidas
+- Um requisito de observabilidade parecer incompleto ou inconsistente
+- Um primitivo de agente (PKG-x) conflitar com primitivos já instalados por outros pacotes APM
+- Um MCP server self-defined precisar ser usado transitivamente (boundary de segurança)
+
+---
+
+## Workflow APM CLI (Agent Context)
+
+> Este workflow é **independente** do ciclo SDD. Pode ser iniciado em paralelo,
+> antes ou depois do ciclo `requirements → design → tasks`, dependendo da maturidade
+> da feature. Use `.sdd/specs/_template/agent-context.md` como template.
+
+### Quando usar
+
+- A feature precisa ensinar algo ao agente (regras, guias, workflows)
+- A feature expõe comandos que o usuário deve invocar via agente (`/comando`, `@persona`)
+- A feature precisa integrar MCP servers no contexto do agente
+- O time quer padronizar como o agente age em arquivos/domínios desta feature
+
+### Etapa PKG-1 — Definir Primitivos
+
+1. Copie `.sdd/specs/_template/agent-context.md` para a pasta da feature
+2. Preencha a seção **Propósito do Pacote** (o humano preenche, a IA pode sugerir)
+3. Liste os primitivos necessários (Instructions, Prompts, Agents, Skills, Hooks, MCP)
+4. Atribua IDs PKG-Ix / PKG-Px / PKG-Ax / PKG-Sx / PKG-Hx / PKG-Mx
+5. Execute o checklist da seção de Primitivos
+
+### Etapa PKG-2 — Design dos Primitivos
+
+1. Confirme que a seção **Primitivos** foi aprovada pelo humano
+2. Preencha as tabelas de Design (Instructions, Prompts, Agents, Skills, Hooks, MCP)
+3. Preencha o bloco `apm.yml` — **nunca tokens literais**, sempre `${VAR}`
+4. Preencha a tabela de **Targets Alvo**
+5. Execute o checklist da seção de Design
+
+### Etapa PKG-3 — Executar Tasks
+
+1. Confirme que o Design foi aprovado pelo humano
+2. Execute **T-PKG-01 a T-PKG-04** na ordem — uma por vez, aguardando aprovação
+3. Tasks de PKG devem referenciar IDs PKG-x do `agent-context.md`
+4. Ao final, execute o **Checklist de Conformidade** do `agent-context.md`

@@ -1,0 +1,475 @@
+# SDD Framework com Microsoft APM
+
+> Baseado nos princípios de **Spec-Driven Development** explorados por Birgitta Böckeler
+> em [Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
+> (Martin Fowler, Out/2025), integrado a padrões conceituais de **Microsoft APM**
+> (Application Performance Monitoring — Azure Monitor / Application Insights).
+
+---
+
+## O que é este framework?
+
+Este framework é uma estrutura **agnóstica de tecnologia** para praticar
+**Spec-Driven Development (SDD)** com nível **spec-first**, onde:
+
+1. Uma spec estruturada é escrita *antes* do código.
+2. A spec se torna a fonte de verdade para humanos e agentes de IA.
+3. Cada spec define explicitamente seus **requisitos de observabilidade** (APM).
+4. A spec é descartada após a conclusão da task, mas o memory bank persiste.
+
+---
+
+## Memory Bank
+
+O memory bank é o **contexto permanente do projeto** — lido pelo agente de IA
+no início de toda sessão, antes de qualquer ação. Não é um changelog nem uma
+documentação de features: é o que **sempre vale**, independente de qual spec
+está sendo trabalhada.
+
+| Arquivo | Propósito | Quem mantém |
+|---|---|---|
+| `constitution.md` | Princípios imutáveis que toda spec e task deve respeitar (ex: observabilidade obrigatória) | Humano — raramente muda |
+| `architecture.md` | Decisões arquiteturais estáveis: estilo, C4, ADRs, padrões obrigatórios, dependências aprovadas | Humano — atualizado após cada feature relevante |
+| `product.md` | Visão do produto, usuários, objetivos de negócio e KPIs | Humano — atualizado quando o produto evolui |
+| `apm-standards.md` | Padrões de observabilidade (naming, tipos de telemetria) e primitivos APM CLI (PKG-x) adotados no projeto | Humano + IA |
+
+> **Regra de ouro**: se uma decisão arquitetural relevante surgir durante a
+> execução de uma feature, ela deve ser **promovida para `architecture.md`**
+> antes de descartar a spec. O checklist final de `tasks.md` lembra disso.
+
+---
+
+## Níveis de SDD (conforme o artigo)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  NÍVEL          │ CRIAÇÃO             │ EVOLUÇÃO/MANUTENÇÃO          │
+├─────────────────────────────────────────────────────────────────────┤
+│  Spec-first     │ Spec → Código       │ Nova spec por mudança        │
+│  ← ADOTADO      │ (humano + IA)       │ Spec anterior descartada     │
+├─────────────────────────────────────────────────────────────────────┤
+│  Spec-anchored  │ Spec → Código       │ Spec editada (artefato vivo) │
+├─────────────────────────────────────────────────────────────────────┤
+│  Spec-as-source │ Spec → Código (IA)  │ Humano nunca toca no código  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+Este framework adota **spec-first**. A spec guia a implementação de uma task/story
+e pode ser descartada após a entrega. O memory bank, no entanto, é mantido vivo.
+
+---
+
+## Estrutura de pastas
+
+> Árvore completa esperada em um projeto que adota SDD + APM (observabilidade)
+> + APM CLI (contexto de agente). A pasta `.apm/` é mantida pelo ciclo Agent Context,
+> independente do ciclo SDD.
+
+```
+projeto/
+│
+├── .apm/                              ← Fonte dos primitivos de agente (APM CLI)
+│   ├── instructions/
+│   │   └── <nome>.instructions.md     ← Regras por glob de arquivos (PKG-Ix)
+│   ├── prompts/
+│   │   └── <nome>.prompt.md           ← Comandos invocados pelo usuário (PKG-Px)
+│   ├── agents/
+│   │   └── <nome>.agent.md            ← Personas @nome especializadas (PKG-Ax)
+│   ├── skills/
+│   │   └── <nome>/
+│   │       ├── SKILL.md               ← Guia consultado automaticamente (PKG-Sx)
+│   │       └── references/            ← Conteúdo longo extraído do body
+│   └── hooks/
+│       └── <nome>.json                ← Callbacks PreToolUse/PostToolUse (PKG-Hx)
+│
+├── .sdd/                              ← Framework SDD (spec-first)
+│   ├── memory-bank/                   ← Contexto persistente (todas as tasks)
+│   │   ├── constitution.md            ← Princípios imutáveis
+│   │   ├── product.md                 ← Contexto de produto e usuários
+│   │   ├── architecture.md            ← Decisões arquiteturais
+│   │   └── apm-standards.md           ← Padrões APM (observabilidade + APM CLI)
+│   │
+│   ├── adr/                           ← Decisões arquiteturais detalhadas
+│   │   ├── _template.md               ← Template de ADR (copiar para cada decisão)
+│   │   └── ADR-01-titulo.md           ← Uma decisão por arquivo
+│   │
+│   └── specs/
+│       ├── _template/                 ← Templates base (copiar para cada feature)
+│       │   ├── requirements.md        ← Requisitos funcionais + observabilidade
+│       │   ├── design.md              ← Design técnico + Observability Design
+│       │   ├── tasks.md               ← Tasks de implementação + instrumentação APM
+│       │   └── agent-context.md       ← Ciclo APM CLI independente (opcional)
+│       │
+│       └── <nome-da-feature>/         ← Spec de uma feature específica
+│           ├── requirements.md        ← Aprovado pelo humano
+│           ├── design.md              ← Aprovado pelo humano
+│           ├── tasks.md               ← Em execução
+│           └── agent-context.md       ← Se a feature produz primitivos de agente
+│
+├── AGENTS.md                          ← Auto-descoberto por agentes de IA (deve estar na raiz)
+├── apm.yml                            ← Manifesto do pacote APM CLI (PKG-Mx aqui)
+│
+└── src/                               ← Código da aplicação
+    └── ...
+```
+
+---
+
+## Fluxo de trabalho
+
+**Ciclo APM CLI** (configura o contexto do agente — independente, pode rodar em qualquer ordem):
+
+```
+ ┌──────────────────┐
+ │  PKG-1           │  → Definir primitivos necessários em agent-context.md
+ │  PRIMITIVOS      │    (Instructions, Prompts, Agents, Skills, Hooks, MCP)
+ └────────┬─────────┘
+          │  Revisão humana obrigatória
+          ▼
+ ┌──────────────────┐
+ │  PKG-2           │  → Design técnico dos primitivos + apm.yml + targets alvo
+ │  DESIGN          │
+ └────────┬─────────┘
+          │  Revisão humana obrigatória
+          ▼
+ ┌──────────────────┐
+ │  PKG-3           │  → T-PKG-01 a T-PKG-04: criar arquivos, compilar, validar
+ │  EXECUÇÃO        │    por target (apm install + apm compile)
+ └──────────────────┘
+```
+
+**Ciclo SDD** (spec-first, sequencial com aprovação humana em cada etapa):
+
+```
+ ┌──────────────────┐
+ │  1. REQUIREMENTS │  → Requisitos funcionais + observabilidade (OBS-x)
+ └────────┬─────────┘
+          │  Revisão humana obrigatória
+          ▼
+ ┌──────────────────┐
+ │  2. DESIGN       │  → Design técnico + Observability Design (APM-Mx, APM-Ex)
+ └────────┬─────────┘
+          │  Revisão humana obrigatória
+          ▼
+ ┌──────────────────┐
+ │  3. TASKS        │  → Tasks de implementação + T-APM-01 a T-APM-05 (obrigatórias)
+ └────────┬─────────┘
+          │  Execução task-a-task com revisão incremental
+          ▼
+ ┌──────────────────┐
+ │  4. VALIDAÇÃO    │  → APM: métricas, alertas, dashboards implementados
+ └──────────────────┘
+```
+
+### Tamanho ideal de problema
+
+SDD introduz overhead cognitivo. Use este framework para problemas de tamanho
+**médio** (3–8 pontos de story), onde o custo de formalizar o spec é justificável.
+
+| Tamanho        | Recomendação                                          |
+|----------------|-------------------------------------------------------|
+| Bug pequeno    | Não use SDD — vá direto ao código com IA              |
+| Feature média  | **Use este framework** (fluxo completo)               |
+| Feature grande | Quebre em múltiplas specs menores (ver abaixo)        |
+| Produto novo   | Comece pelo memory bank; depois uma spec por feature  |
+
+#### Quebrando features grandes em sub-specs
+
+Quando uma feature for grande demais para um único spec, crie um subdiretório
+por componente independente. Cada sub-spec tem seu próprio ciclo SDD completo:
+
+```
+.sdd/specs/
+  checkout/                ← spec de alto nível (orienta, não executa)
+    requirements.md        ← escopo geral e dependências entre sub-specs
+    design.md              ← arquitetura da feature como um todo
+  checkout-pagamento/      ← sub-spec com ciclo SDD próprio
+    requirements.md
+    design.md
+    tasks.md
+  checkout-carrinho/       ← sub-spec com ciclo SDD próprio
+    requirements.md
+    design.md
+    tasks.md
+```
+
+> **Sinal de que uma feature deve ser quebrada**: `tasks.md` com mais de 10 tasks,
+> ou `design.md` com mais de 2 domínios de negócio distintos.
+> O `tasks.md` dentro de cada sub-spec permanece um **arquivo único** —
+> a divisão é por escopo de feature, não por volume de tasks.
+
+---
+
+## Integração entre `.sdd/` e `.apm/`
+
+Os dois ciclos são independentes mas se complementam. O `.sdd/` **define intenção**;
+o `.apm/` **entrega execução** para o agente de IA.
+
+```mermaid
+flowchart LR
+  subgraph sdd [".sdd/"]
+    mb["memory-bank/\napm-standards.md\narchitecture.md"]
+    ac["specs/&lt;feature&gt;/\nagent-context.md"]
+  end
+
+  subgraph apm [".apm/"]
+    primitivos["instructions/\nprompts/\nagents/\nskills/\nhooks/"]
+    yml["apm.yml"]
+  end
+
+  ac -->|"PKG-1 → PKG-2 → PKG-3\n(T-PKG-01~04)"| primitivos
+  mb -->|"naming conventions\ne MCP permitidos"| yml
+  ac -->|"define manifesto"| yml
+```
+
+**Pontos de integração:**
+
+| Arquivo em `.sdd/` | Referencia / alimenta | Arquivo em `.apm/` |
+|---|---|---|
+| `specs/<feature>/agent-context.md` | Define e origina | `instructions/`, `prompts/`, `agents/`, `skills/`, `hooks/` |
+| `memory-bank/apm-standards.md` | Contém naming conventions usadas em | `apm.yml` (IDs de primitivos PKG-x) |
+| `memory-bank/architecture.md` | Informa quais MCP servers são permitidos em | `apm.yml` |
+
+**O que não cruza os limites:**
+
+- Specs SDD (`requirements.md`, `design.md`, `tasks.md`) não são lidas pelo APM CLI
+- Primitivos em `.apm/` não substituem o memory bank — ensinam comportamento ao agente, não capturam decisões de produto ou arquitetura
+- `apm.yml` não é um spec — é um manifesto de empacotamento, não de requisitos
+
+---
+
+## Integração com APM (Observabilidade)
+
+Todo spec neste framework inclui uma seção de **Observability Design** que define:
+
+- **Telemetria obrigatória**: traces distribuídos, métricas customizadas, eventos de negócio, exceções
+- **SLOs (Service Level Objectives)**: thresholds de latência, taxa de erro e disponibilidade
+- **Condições de alerta**: regras com severidade, impacto e runbook
+- **Conceito de dashboard**: KPIs operacionais e de negócio visíveis para o time
+
+O framework é agnóstico de plataforma. Os padrões específicos do projeto
+(plataforma APM adotada, naming conventions, IDs) ficam centralizados em
+`.sdd/memory-bank/apm-standards.md`.
+
+---
+
+## Como criar uma nova spec
+
+```bash
+# Ciclo SDD
+cp -r .sdd/specs/_template .sdd/specs/<nome-da-feature>
+
+# 1. Preencha requirements.md com a IA → Revise e aprove
+# 2. Preencha design.md com a IA → Revise e aprove
+# 3. Gere tasks.md com a IA → Execute task a task
+# 4. Ao finalizar, valide APM e descarte a spec (spec-first)
+
+# Ciclo APM CLI (se a feature produz primitivos de agente — independente do SDD)
+# O agent-context.md já está no template copiado acima
+# 1. Preencha a seção Primitivos → Aprove
+# 2. Preencha o Design dos Primitivos → Aprove
+# 3. Execute T-PKG-01 a T-PKG-04 → apm install && apm compile
+```
+
+---
+
+## Ciclo de vida do projeto
+
+### 1. Criação do repositório
+
+Passos para adotar o framework em um projeto novo:
+
+```
+1. Crie o repositório e clone localmente
+2. Copie a pasta .sdd/ para a raiz do projeto
+3. Preencha o memory bank (humano):
+   a. constitution.md  — ajuste ou mantenha os princípios padrão
+   b. product.md       — descreva o produto, usuários e objetivos de negócio
+   c. architecture.md  — defina estilo arquitetural, C4 Level 1 e 2, ADRs iniciais
+   d. apm-standards.md — escolha a plataforma APM e defina naming conventions
+4. (Opcional) Configure o ciclo APM CLI:
+   a. Inicialize: apm init
+   b. Preencha agent-context.md para o contexto base do projeto
+   c. Execute: apm install && apm compile
+5. Faça commit do estado inicial do memory bank
+```
+
+### 2. Feature nova
+
+```
+1. Crie a branch: git checkout -b feat/<nome>
+2. Copie o template: cp -r .sdd/specs/_template .sdd/specs/<nome>
+3. Ciclo SDD:
+   requirements.md → aprovação → design.md → aprovação → tasks.md → execução
+4. (Se aplicável) Ciclo APM CLI em paralelo:
+   agent-context.md → PKG-1 → PKG-2 → PKG-3
+5. Valide APM antes do merge:
+   [ ] Métricas e eventos visíveis na plataforma APM
+   [ ] Alertas configurados e testados
+   [ ] Dashboard atualizado
+6. Pull Request → Code Review → Merge
+7. Atualize o CHANGELOG.md com a seção `Added` (ou `Changed` se for modificação)
+8. Descarte a spec (spec-first) ou arquive se houver valor histórico
+9. Promova decisões arquiteturais relevantes para architecture.md
+```
+
+### 3. Bug fix
+
+> Bug fixes geralmente **não justificam** o ciclo SDD completo.
+> Use a tabela de tamanho de problema como guia.
+>
+> **Artefatos permanentes de um bug fix:**
+> - Commit message (sempre)
+> - Entrada `Fixed` no CHANGELOG (obrigatório)
+> - ADR (somente se a correção implicou em mudança arquitetural)
+> — Spec e mini-spec são sempre descartados após o merge
+
+```
+Bug simples (causa conhecida, mudança localizada):
+  1. Crie a branch: git checkout -b fix/<nome>
+  2. Corrija, teste e valide que a telemetria APM existente cobre o cenário
+  3. Pull Request → Merge
+  — Sem spec, sem ADR (a menos que a correção mude uma decisão arquitetural)
+
+Bug complexo (causa desconhecida, impacto amplo):
+  1. Crie a branch: git checkout -b fix/<nome>
+  2. Crie um mini-spec em .sdd/specs/<nome>/design.md descrevendo:
+     - Hipótese da causa raiz
+     - Componentes afetados
+     - Abordagem de correção
+  3. Execute as tasks de correção
+  4. Valide com APM: verifique que o evento/trace problemático sumiu
+  5. Pull Request → Merge → Descarte o mini-spec
+  — Se a correção mudou uma decisão arquitetural (ex: adotou circuit breaker,
+     trocou estratégia de retry), registre um ADR antes de descartar o mini-spec
+```
+
+### 4. Deploy
+
+```
+Pré-deploy (checklist mínimo):
+  [ ] Todas as tasks T-APM-xx concluídas e validadas em staging
+  [ ] Alertas configurados (não deployar sem alertas ativos)
+  [ ] Feature flag definida (se aplicável)
+  [ ] Rollback plan documentado no design.md
+
+Deploy:
+  1. Merge para a branch principal
+  2. Pipeline CI/CD executa testes e build
+  3. Deploy em staging → smoke test com APM aberto
+  4. Deploy em produção → monitorar dashboard por [período definido em design.md]
+
+Pós-deploy:
+  [ ] Dashboard mostrando dados reais de produção
+  [ ] Nenhum alerta disparado inesperadamente
+  [ ] SLOs dentro dos thresholds definidos no design.md
+```
+
+### 5. Manutenção contínua do memory bank
+
+```
+Após cada feature/bug relevante:
+  [ ] Novas decisões arquiteturais → architecture.md (ADRs)
+  [ ] Mudanças no modelo de domínio → architecture.md (C4 Level 2)
+  [ ] Novos padrões de telemetria adotados → apm-standards.md
+  [ ] Mudanças no produto/usuários → product.md
+
+Periodicidade sugerida:
+  - Revisão do memory bank a cada ciclo de release
+  - ADRs: registrar no momento da decisão, nunca retroativamente
+```
+
+---
+
+## CHANGELOG
+
+O `CHANGELOG.md` é **obrigatório** em todo projeto que adota este framework.
+Siga o padrão [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) com as seções:
+
+| Seção | Quando usar |
+|---------|-------------|
+| `Added` | Nova feature ou comportamento adicionado |
+| `Changed` | Mudança em comportamento existente |
+| `Deprecated` | Feature que será removida em versões futuras |
+| `Removed` | Feature removida |
+| `Fixed` | Correção de bug |
+| `Security` | Correção de vulnerabilidade |
+
+> **ADRs vs. CHANGELOG**: os ADRs cobrem *decisões arquiteturais* com contexto rico
+> (por que, alternativas, consequências). O CHANGELOG cobre *mudanças incrementais*
+> cronologicamente. São complementares, não substitutos.
+
+**Quando atualizar**:
+- Feature nova → `Added` no merge para a branch principal
+- Bug fix → `Fixed` no merge
+- Decisão arquitetural → ADR (não vai para o CHANGELOG)
+
+## Commits semânticos
+
+Todo commit deve seguir o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/).
+Os prefixos mapeiam diretamente para as seções do CHANGELOG:
+
+| Prefixo | Seção CHANGELOG | Quando usar |
+|---------|-----------------|-------------|
+| `feat:` | `Added` | Nova feature ou comportamento |
+| `fix:` | `Fixed` | Correção de bug |
+| `chore:` | — | Manutenção sem impacto funcional (deps, build, config) |
+| `docs:` | — | Documentação apenas |
+| `refactor:` | `Changed` | Refatoração sem mudança de comportamento |
+| `perf:` | `Changed` | Melhoria de performance |
+| `test:` | — | Adição ou correção de testes |
+| `apm:` | — | Instrumentação APM (traces, métricas, alertas, dashboard) |
+
+Use `!` para breaking changes: `feat!: remove endpoint legado`
+
+> **Recomendado**: configure um hook de `commit-msg` (via git hooks ou ferramenta de sua escolha)
+> para validar automaticamente as mensagens contra o padrão Conventional Commits,
+> e um gerador de CHANGELOG a partir do histórico git.
+
+## Versionamento
+
+Este framework adota **[Semantic Versioning](https://semver.org/lang/pt-BR/)** (`MAJOR.MINOR.PATCH`),
+derivado diretamente dos commits semânticos:
+
+| Evento no git | Impacto na versão | Como declarar |
+|---------------|-------------------|---------------|
+| `fix:` | `PATCH` — 0.0.**x** | Commit normal |
+| `feat:` | `MINOR` — 0.**x**.0 | Commit normal |
+| Qualquer prefixo com `!` ou footer `BREAKING CHANGE:` | `MAJOR` — **x**.0.0 | `feat!:` ou `fix!:` |
+
+**Fluxo de release:**
+
+```
+1. Commits do ciclo SDD seguem Conventional Commits
+2. No release: bump de versão derivado automaticamente dos commits desde a última tag
+3. CHANGELOG.md atualizado com as entradas do período
+4. Tag git criada: vMAJOR.MINOR.PATCH
+```
+
+> **Recomendado**: automatize os passos 2–4 com uma ferramenta de release
+> (baseada em Conventional Commits) integrada ao CI/CD.
+
+> **Versão 0.x.x**: enquanto o projeto está em desenvolvimento inicial,
+> `MAJOR=0` indica que a API pública ainda não é estável — breaking changes
+> podem ocorrer em `MINOR`.
+
+---
+
+## Referências
+
+- [NIVEL-SDD.md](NIVEL-SDD.md) — Análise comparativa dos três níveis SDD (prós, contras, quando usar)
+- [Spec-Driven Development — Birgitta Böckeler (martinfowler.com)](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
+- [GitHub spec-kit](https://github.com/github/spec-kit)
+- [Kiro](https://kiro.dev/)
+- [Tessl Framework](https://docs.tessl.io/)
+
+**Microsoft APM**
+- [Azure Monitor — Visão geral](https://learn.microsoft.com/azure/azure-monitor/overview)
+- [Application Insights — Visão geral](https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview)
+- [Distributed Tracing](https://learn.microsoft.com/azure/azure-monitor/app/distributed-trace-data)
+- [Custom Metrics](https://learn.microsoft.com/azure/azure-monitor/essentials/metrics-custom-overview)
+- [Custom Events (trackEvent)](https://learn.microsoft.com/azure/azure-monitor/app/api-custom-events-metrics)
+- [Alerts — Visão geral](https://learn.microsoft.com/azure/azure-monitor/alerts/alerts-overview)
+- [Dashboards no Azure Portal](https://learn.microsoft.com/azure/azure-portal/azure-portal-dashboards)
+- [OpenTelemetry com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/opentelemetry-enable)
+- [SLOs com Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/app/sla-report)
