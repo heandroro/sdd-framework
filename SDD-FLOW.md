@@ -62,6 +62,7 @@ automaticamente no seu editor. Basta conversar com o agente normalmente.
 | `/promover-adr <decisão>` | Registra decisão arquitetural como ADR |
 | `/atualizar-produto <mudança>` | Atualiza `product.md` com nova visão ou segmento |
 | `/atualizar-apm-standards <padrão>` | Atualiza `apm-standards.md` com novo padrão de observabilidade |
+| `/cachear-referencia <url> <tech>` | Busca e cacheia documentação de tecnologia em `.sdd/references/` |
 | `@sdd` | Agente completo que conduz o ciclo SDD com aprovações humanas |
 
 ---
@@ -165,6 +166,7 @@ flowchart LR
         I4["sdd-constitution.instructions<br/>applyTo: constitution.md"]
         SK1["skill: sdd-workflow<br/>auto-descoberta em .sdd/"]
         SK2["skill: sdd-memory-bank<br/>auto-descoberta em .sdd/memory-bank/"]
+        SK3["skill: sdd-stack<br/>auto-descoberta em .sdd/references/"]
     end
 
     subgraph MANUAL["Invocação manual"]
@@ -175,6 +177,7 @@ flowchart LR
         P4["/promover-adr"]
         P5["/atualizar-produto"]
         P6["/atualizar-apm-standards"]
+        P7["/cachear-referencia"]
         AG["@sdd — agente completo"]
     end
 ```
