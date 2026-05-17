@@ -8,7 +8,10 @@ Fluxo completo do ciclo Spec-Driven Development, do início de uma sessão até 
 
 ```mermaid
 flowchart TD
-    SESSION([Início de sessão]) --> MB
+    SESSION([Início de sessão]) --> MB_EXISTS{"Memory bank<br/>existe?"}
+    MB_EXISTS -->|Não| INIT["/init-memory-bank"]
+    INIT --> MB
+    MB_EXISTS -->|Sim| MB
 
     subgraph MB["📚 Memory Bank — leitura obrigatória"]
         MB1[constitution.md] --> MB2[architecture.md] --> MB3[product.md] --> MB4[apm-standards.md]
