@@ -96,6 +96,18 @@
 
 ---
 
+## 9. Princípio da Atualização Obrigatória da Documentação
+
+**Nenhuma feature está completa sem que o Memory Bank seja atualizado.**
+
+- Ao fechar uma spec, o agente DEVE garantir que decisões arquiteturais relevantes
+  foram promovidas para `architecture.md`.
+- Padrões emergentes e lições aprendidas DEVEM ser registrados em `KNOWLEDGE.md`.
+- Se a feature alterar KPIs, personas ou roadmap, `product.md` DEVE ser atualizado.
+- As tasks `T-DOC-01` a `T-DOC-03` são obrigatórias e não podem ser removidas de `tasks.md`.
+
+---
+
 ## Checklist de Conformidade (para IA verificar em cada etapa)
 
 ```
@@ -114,4 +126,10 @@ Ao finalizar tasks.md:
   [ ] Toda task referencia pelo menos um REQ-x.x
   [ ] Tasks de Application Performance Monitor presentes e referenciam itens APM-xx do design.md
   [ ] Nenhuma task é excessivamente grande
+  [ ] Tasks T-DOC-01 a T-DOC-03 presentes
+
+Ao fechar uma spec (após entrega):
+  [ ] T-DOC-01: Decisões arquiteturais promovidas para architecture.md
+  [ ] T-DOC-02: Padrões/lições registrados em KNOWLEDGE.md
+  [ ] T-DOC-03: product.md verificado e atualizado se necessário
 ```

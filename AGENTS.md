@@ -44,8 +44,9 @@ Quando solicitado a criar/ajudar com `tasks.md`:
 1. Confirme que `design.md` foi aprovado pelo humano
 2. Gere tasks de implementação com rastreabilidade para REQ-x.x
 3. **Sempre inclua as tasks T-APM-01 a T-APM-05** — elas nunca são opcionais
-4. Tasks de Application Performance Monitor devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
-5. Execute o checklist ao final
+4. **Sempre inclua as tasks T-DOC-01 a T-DOC-03** — elas nunca são opcionais
+5. Tasks de Application Performance Monitor devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
+6. Execute o checklist ao final
 
 ### Execução de Tasks
 
@@ -65,6 +66,39 @@ Proponha a divisão em sub-specs **antes de iniciar o design** quando:
 Cada sub-spec fica em `.sdd/specs/<feature>-<componente>/` e tem seu próprio
 ciclo SDD completo. Nunca divida tasks em múltiplos arquivos — `tasks.md` é sempre arquivo único.
 
+### Retrospectiva do Ciclo
+
+Após todas as tasks (incluindo T-DOC-xx) estarem concluídas, o agente deve
+**oferecer** a condução de uma retrospectiva estruturada. O humano pode aceitar
+ou recusar — a fase é opcional e não bloqueia o fechamento da spec.
+
+**Quando oferecer**: ao verificar que o Checklist Final de `tasks.md` está
+100% marcado.
+
+**Como conduzir**: percorra as perguntas abaixo com o humano, uma por vez,
+e registre os insights em `KNOWLEDGE.md → Retrospectivas de Spec`.
+
+#### Bloco 1 — Qualidade do Spec
+
+1. O `requirements.md` estava completo, ou surgiram lacunas funcionais durante o design ou a implementação?
+2. O `design.md` precisou ser revisado após o início da implementação? Se sim, por quê?
+3. O ciclo de aprovação humana (requirements → design → tasks) fluiu sem travamentos?
+
+#### Bloco 2 — Tasks e Observabilidade
+
+4. Alguma task precisou ser subdividida durante a execução? O tamanho das tasks estava adequado?
+5. O design de telemetria (APM) cobriu o que era necessário, ou faltou algo?
+6. As tasks T-APM foram executadas conforme planejado, ou houve surpresas?
+
+#### Bloco 3 — Processo Geral
+
+7. O que funcionou bem neste ciclo SDD?
+8. O que seria feito diferente no próximo ciclo?
+9. Algum padrão novo emergiu que deveria ser adotado como default no framework?
+
+**Output esperado**: resumo conciso em `KNOWLEDGE.md → Retrospectivas de Spec`
+(uma linha por item relevante na tabela, ação no framework quando aplicável).
+
 ---
 
 ## Comportamentos Proibidos
@@ -74,6 +108,8 @@ ciclo SDD completo. Nunca divida tasks em múltiplos arquivos — `tasks.md` é 
 - **NÃO** introduza dependências externas não listadas em `architecture.md`
 - **NÃO** altere contratos de interface já estabelecidos sem aprovação
 - **NÃO** pule as tasks T-APM-xx mesmo que o humano não as mencione
+- **NÃO** pule as tasks T-DOC-xx mesmo que o humano não as mencione
+- **NÃO** feche o ciclo de uma spec sem completar T-DOC-01 a T-DOC-03
 - **NÃO** inclua tokens/secrets literais em exemplos de `apm.yml` — sempre usar `${VAR}`
 - **NÃO** misture detalhes técnicos em `requirements.md`
 

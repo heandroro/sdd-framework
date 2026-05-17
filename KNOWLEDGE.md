@@ -39,6 +39,18 @@ _Nenhum padrão emergente documentado ainda._
 
 ---
 
+## Retrospectivas de Spec
+
+> Registro de retrospectivas conduzidas ao fechar specs.
+> Use para identificar tendências e melhorar o processo SDD ao longo do tempo.
+> Alimentado pela fase "Retrospectiva do Ciclo" descrita em `AGENTS.md`.
+
+| Data | Spec | O que funcionou | O que melhorar | Ação no framework |
+|------|------|-----------------|----------------|-------------------|
+| —    | —    | —               | —              | —                 |
+
+---
+
 ## FAQs para Agentes
 
 **Q: Posso pular as tasks de Application Performance Monitor se o humano não as mencionar?**
