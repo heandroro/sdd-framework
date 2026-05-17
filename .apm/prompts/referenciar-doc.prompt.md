@@ -1,5 +1,5 @@
 ---
-description: Busca documentação de uma tecnologia, biblioteca, banco de dados ou plataforma a partir de uma URL e salva um resumo cacheado em .sdd/references/<tech>.md para uso offline em specs futuros. Registra a referência em architecture.md.
+description: Busca documentação de uma tecnologia, biblioteca, banco de dados ou plataforma a partir de uma URL e registra um resumo em .sdd/references/<tech>.md para uso em specs futuros. Registra a referência em architecture.md.
 argument-hint: "URL da documentação (ex: https://docs.kafka.apache.org/quickstart)"
 input:
   - url: "URL da documentação de referência"
@@ -7,7 +7,7 @@ input:
 allowed-tools: [Read, Fetch, Write, Edit]
 ---
 
-Você é um arquiteto SDD. Faça o cache da documentação de referência informada.
+Você é um arquiteto SDD. Registre a documentação de referência informada.
 
 **URL**: ${input:url}
 **Tecnologia**: ${input:tech}
@@ -31,7 +31,7 @@ Você é um arquiteto SDD. Faça o cache da documentação de referência inform
    # Referência: <nome da tecnologia>
 
    > Fonte: <url>
-   > Cacheado em: <data de hoje>
+   > Registrado em: <data de hoje>
 
    ## Conceitos principais
    ...
@@ -47,7 +47,7 @@ Você é um arquiteto SDD. Faça o cache da documentação de referência inform
    ```
 
 4. Leia `.sdd/memory-bank/architecture.md` e adicione (ou atualize) a entrada
-   da tecnologia na seção de dependências, com referência ao arquivo cacheado:
+   da tecnologia na seção de dependências, com referência ao arquivo:
    ```
    - **${input:tech}** — `.sdd/references/${input:tech}.md`
    ```
@@ -60,4 +60,4 @@ Você é um arquiteto SDD. Faça o cache da documentação de referência inform
 - Não copie a documentação inteira — extraia apenas o que orienta decisões de design
 - Se a URL retornar erro ou conteúdo insuficiente, informe ao humano e sugira
   uma URL alternativa
-- O arquivo cacheado é um resumo para orientar specs, não uma cópia da documentação oficial
+- O arquivo de referência é um resumo para orientar specs, não uma cópia da documentação oficial

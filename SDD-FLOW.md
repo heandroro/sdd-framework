@@ -62,7 +62,7 @@ automaticamente no seu editor. Basta conversar com o agente normalmente.
 | `/promover-adr <decisão>` | Registra decisão arquitetural como ADR |
 | `/atualizar-produto <mudança>` | Atualiza `product.md` com nova visão ou segmento |
 | `/atualizar-apm-standards <padrão>` | Atualiza `apm-standards.md` com novo padrão de observabilidade |
-| `/cachear-referencia <url> <tech>` | Busca e cacheia documentação de tecnologia em `.sdd/references/` |
+| `/referenciar-doc <url> <tech>` | Busca e registra documentação de tecnologia em `.sdd/references/` |
 | `/referenciar-repo <owner/repo> <nome>` | Analisa estrutura de repositório GitHub de referência via MCP e registra em `.sdd/references/` |
 | `@sdd` | Agente completo que conduz o ciclo SDD com aprovações humanas |
 
@@ -178,7 +178,7 @@ flowchart LR
         P4["/promover-adr"]
         P5["/atualizar-produto"]
         P6["/atualizar-apm-standards"]
-        P7["/cachear-referencia"]
+        P7["/referenciar-doc"]
         P8["/referenciar-repo"]
         AG["@sdd — agente completo"]
     end
