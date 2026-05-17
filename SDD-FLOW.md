@@ -4,6 +4,68 @@ Fluxo completo do ciclo Spec-Driven Development, do início de uma sessão até 
 
 ---
 
+## Como usar este framework
+
+Após instalar o pacote (`apm install sdd-framework`), os primitivos são ativados
+automaticamente no seu editor. Basta conversar com o agente normalmente.
+
+### Exemplo de sessão — projeto novo
+
+> **Usuário:** quero começar a usar o SDD neste projeto. é uma API de gestão de frotas para logística B2B.
+>
+> **Agente:** Vou inicializar o memory bank. Antes de criar os arquivos, preciso de algumas informações:
+> - Qual o estilo arquitetural? (ex: microsserviços, monolito modular)
+> - Quais linguagens/plataformas principais?
+> - Já tem dependências externas conhecidas? (banco, broker, gateway)
+>
+> **Usuário:** microsserviços em Node.js, PostgreSQL e Kafka. gateway de pagamento externo.
+>
+> **Agente:** *(cria `.sdd/memory-bank/` com os 4 arquivos)* Memory bank inicializado.
+> Use `/criar-spec` para começar o primeiro spec.
+
+### Exemplo de sessão — feature nova
+
+> **Usuário:** `/criar-spec rastreamento-de-entrega`
+>
+> **Agente:** *(lê o memory bank)* Vou criar o `requirements.md` para rastreamento-de-entrega.
+> Antes, a pasta `.sdd/specs/rastreamento-de-entrega/` não existe ainda — execute:
+> ```
+> cp -r .sdd/specs/_template .sdd/specs/rastreamento-de-entrega
+> ```
+> *(após execução)* Criando `requirements.md`...
+>
+> **Usuário:** *(revisa o arquivo gerado)* aprovado.
+>
+> **Agente:** Perfeito. Próximo passo: posso criar o `design.md` quando quiser.
+> Use `/revisar-spec requirements` a qualquer momento para uma revisão formal.
+
+### Exemplo de sessão — execução de task
+
+> **Usuário:** pode começar a T-03 do rastreamento-de-entrega?
+>
+> **Agente:** Confirmando: T-03 — Implementar endpoint `GET /entregas/{id}/posicao` `[REQ-2.1]`.
+> Posso iniciar?
+>
+> **Usuário:** sim
+>
+> **Agente:** *(implementa)* Concluído. Marquei `[x]` em `tasks.md`. Aguardo sua aprovação
+> para avançar para a T-04.
+
+### Primitivos disponíveis
+
+| Como invocar | O que faz |
+|---|---|
+| `/init-memory-bank` | Inicializa o memory bank em projetos novos |
+| `/criar-spec <feature>` | Cria `requirements.md` para uma nova feature |
+| `/revisar-spec <etapa>` | Revisa requirements, design ou tasks — retorna ✅/⚠️/❌ |
+| `/gerar-tasks <feature>` | Gera `tasks.md` a partir de um `design.md` aprovado |
+| `/promover-adr <decisão>` | Registra decisão arquitetural como ADR |
+| `/atualizar-produto <mudança>` | Atualiza `product.md` com nova visão ou segmento |
+| `/atualizar-apm-standards <padrão>` | Atualiza `apm-standards.md` com novo padrão de observabilidade |
+| `@sdd` | Agente completo que conduz o ciclo SDD com aprovações humanas |
+
+---
+
 ## Visão Geral
 
 ```mermaid
