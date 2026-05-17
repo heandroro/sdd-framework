@@ -63,6 +63,7 @@ automaticamente no seu editor. Basta conversar com o agente normalmente.
 | `/atualizar-produto <mudança>` | Atualiza `product.md` com nova visão ou segmento |
 | `/atualizar-apm-standards <padrão>` | Atualiza `apm-standards.md` com novo padrão de observabilidade |
 | `/cachear-referencia <url> <tech>` | Busca e cacheia documentação de tecnologia em `.sdd/references/` |
+| `/cachear-scaffold <owner/repo> <nome>` | Analisa estrutura de repositório GitHub de referência via MCP e salva scaffold em `.sdd/references/` |
 | `@sdd` | Agente completo que conduz o ciclo SDD com aprovações humanas |
 
 ---
@@ -178,6 +179,7 @@ flowchart LR
         P5["/atualizar-produto"]
         P6["/atualizar-apm-standards"]
         P7["/cachear-referencia"]
+        P8["/cachear-scaffold"]
         AG["@sdd — agente completo"]
     end
 ```
