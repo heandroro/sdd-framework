@@ -1,10 +1,9 @@
 ---
 description: Gera o tasks.md a partir de um design.md aprovado, com rastreabilidade REQ-x.x em cada task e incluindo obrigatoriamente T-APM-01 a T-APM-05.
 argument-hint: "nome da pasta da feature em .sdd/specs/ (ex: order-checkout)"
-allowed-tools:
-  - read_file
-  - file_search
-  - create_file
+input:
+  - feature: "Nome da pasta da feature em .sdd/specs/ (ex: order-checkout)"
+allowed-tools: [Read, Write]
 ---
 
 Você é um engenheiro SDD. Gere o `tasks.md` para a feature informada.

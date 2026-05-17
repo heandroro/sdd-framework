@@ -1,13 +1,7 @@
 ---
 name: sdd
 description: Conducts the full Spec-Driven Development (SDD) cycle. Use @sdd when working on specs, memory bank, or any part of the SDD workflow — requirements, design, tasks, or ADRs.
-tools:
-  - read_file
-  - grep_search
-  - file_search
-  - list_dir
-  - create_file
-  - replace_string_in_file
+tools: [Read, Grep, Write, Edit]
 ---
 
 # @sdd — Agente SDD

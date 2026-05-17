@@ -1,4 +1,5 @@
 ---
+description: "SDD requirements rules — enforces functional-only content, REQ-x.x IDs, OBS-x observability sections, and no-advance-without-approval policy on every requirements.md inside .sdd/specs/."
 applyTo: ".sdd/specs/**/requirements.md"
 ---
 

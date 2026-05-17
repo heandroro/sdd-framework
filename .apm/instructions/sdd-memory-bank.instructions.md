@@ -1,4 +1,5 @@
 ---
+description: "SDD memory bank rules — enforces ordered read-on-session-start, constitution immutability for AI agents, and promote-to-architecture discipline on every file inside .sdd/memory-bank/."
 applyTo: ".sdd/memory-bank/**"
 ---
 

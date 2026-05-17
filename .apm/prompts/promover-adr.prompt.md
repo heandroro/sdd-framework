@@ -1,12 +1,9 @@
 ---
 description: Extrai uma decisão arquitetural da sessão atual e a registra como ADR em .sdd/adr/, atualizando também architecture.md com a referência ao novo ADR.
 argument-hint: "descrição da decisão em uma frase (ex: adotar circuit breaker para chamadas ao gateway de pagamento)"
-allowed-tools:
-  - read_file
-  - file_search
-  - list_dir
-  - create_file
-  - replace_string_in_file
+input:
+  - decisao: "Descrição da decisão arquitetural em uma frase"
+allowed-tools: [Read, Write, Edit]
 ---
 
 Você é um arquiteto SDD. Registre a decisão arquitetural informada como ADR.

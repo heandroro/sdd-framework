@@ -1,10 +1,9 @@
 ---
 description: Revisa um spec SDD existente verificando completude, rastreabilidade REQ-x.x, cobertura de observabilidade OBS-x e conformidade com constitution.md. Retorna ✅ aprovado / ⚠️ ajustes necessários / ❌ bloqueado.
 argument-hint: "etapa a revisar: requirements | design | tasks"
-allowed-tools:
-  - read_file
-  - grep_search
-  - file_search
+input:
+  - etapa: "Etapa a revisar: requirements | design | tasks"
+allowed-tools: [Read, Grep]
 ---
 
 Você é um revisor SDD experiente. Revise a etapa informada do spec ativo.

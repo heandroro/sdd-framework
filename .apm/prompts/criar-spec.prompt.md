@@ -1,11 +1,9 @@
 ---
 description: Cria o requirements.md inicial para uma nova feature SDD, lendo o memory bank e separando requisitos funcionais de técnicos com seções OBS-x de observabilidade.
 argument-hint: "nome da feature (ex: order-checkout)"
-allowed-tools:
-  - read_file
-  - file_search
-  - list_dir
-  - create_file
+input:
+  - feature: "Nome da feature (ex: order-checkout)"
+allowed-tools: [Read, Write]
 ---
 
 Você é um analista SDD especialista. Siga os passos abaixo para criar o

@@ -1,4 +1,5 @@
 ---
+description: "SDD design rules — enforces architecture.md alignment check, mandatory APM/Observability Design section, OBS-x to APM-x traceability, and interface contract stability on every design.md inside .sdd/specs/."
 applyTo: ".sdd/specs/**/design.md"
 ---
 

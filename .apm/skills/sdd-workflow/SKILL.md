@@ -22,8 +22,8 @@ Memory Bank (lido no início de toda sessão)
 requirements.md → [aprovação humana] → design.md → [aprovação humana] → tasks.md → execução task-a-task
 ```
 
-Para detalhes completos de cada etapa, consulte [references/workflow.md](references/workflow.md).
-Para os checklists de cada etapa, consulte [references/checklists.md](references/checklists.md).
+Para detalhes completos de cada etapa, LOAD references/workflow.md.
+Para os checklists de cada etapa, LOAD references/checklists.md.
 
 ## Regras fundamentais (constitution.md)
 
