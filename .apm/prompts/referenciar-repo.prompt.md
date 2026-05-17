@@ -1,17 +1,17 @@
 ---
-description: Analisa a estrutura de um repositório GitHub de referência e salva um resumo de scaffold em .sdd/references/scaffold-<nome>.md para orientar geração de tasks e código. Requer o MCP do GitHub configurado (io.github.github/github-mcp-server).
+description: Analisa a estrutura de um repositório GitHub e registra-o como referência de projeto em .sdd/references/<nome>.md para orientar decisões de design, geração de tasks e código. Requer o MCP do GitHub configurado (io.github.github/github-mcp-server).
 argument-hint: "owner/repo do repositório de referência (ex: nestjs/nest)"
 input:
   - repo: "Repositório GitHub no formato owner/repo (ex: nestjs/nest)"
-  - nome: "Nome curto para identificar o scaffold (ex: nestjs, fastapi, nextjs)"
+  - nome: "Nome curto para identificar a referência (ex: nestjs, fastapi, nextjs)"
 allowed-tools: [Read, Write, Edit, mcp_github_get_file_contents, mcp_github_search_code]
 ---
 
-Você é um arquiteto SDD. Analise o repositório de referência e crie um scaffold
-cacheado para orientar specs e tasks deste projeto.
+Você é um arquiteto SDD. Analise o repositório de referência e registre-o como
+padrão de projeto para orientar specs e tasks.
 
 **Repositório**: ${input:repo}
-**Nome do scaffold**: ${input:nome}
+**Nome da referência**: ${input:nome}
 
 ## Aviso de licença
 
@@ -22,7 +22,7 @@ confirmação explícita de que tem permissão para usar o repositório como ref
 
 ## Passos
 
-1. Verifique se `.sdd/references/scaffold-${input:nome}.md` já existe. Se existir,
+1. Verifique se `.sdd/references/${input:nome}.md` já existe. Se existir,
    informe ao humano e pergunte se deseja atualizar ou cancelar.
 
 2. Leia o arquivo `LICENSE` do repositório via MCP para verificar a licença antes
@@ -41,14 +41,14 @@ confirmação explícita de que tem permissão para usar o repositório como ref
    - Como erros são tratados e logados
    - Como testes são estruturados e nomeados
 
-5. Crie `.sdd/references/scaffold-${input:nome}.md` com o formato:
+5. Crie `.sdd/references/${input:nome}.md` com o formato:
 
    ```
-   # Scaffold de Referência: <nome>
+   # Referência de Projeto: <nome>
 
    > Repositório: github.com/${input:repo}
    > Licença: <licença>
-   > Cacheado em: <data de hoje>
+   > Registrado em: <data de hoje>
 
    ## Stack e Dependências Principais
    <linguagem, runtime, framework principal, dependências-chave>
@@ -67,9 +67,9 @@ confirmação explícita de que tem permissão para usar o repositório como ref
    ```
 
 6. Leia `.sdd/memory-bank/architecture.md` e adicione a entrada na seção de
-   dependências (criando a seção "Scaffolds de Referência" se não existir):
+   referências (criando a seção "Repositórios de Referência" se não existir):
    ```
-   - **scaffold-${input:nome}** — `.sdd/references/scaffold-${input:nome}.md`
+   - **${input:nome}** — `.sdd/references/${input:nome}.md`
      (baseado em github.com/${input:repo})
    ```
 
@@ -79,7 +79,7 @@ confirmação explícita de que tem permissão para usar o repositório como ref
 
 - **Nunca** inclua tokens, senhas ou segredos encontrados no repositório
 - Não copie blocos de código diretamente — extraia padrões, convenções e estruturas
-- Limite o arquivo cacheado a ~200 linhas — foco no que orienta decisões de design
+- Limite o arquivo de referência a ~200 linhas — foco no que orienta decisões de design
 - Se o repositório for privado e o MCP não tiver acesso, informe ao humano
 - Se o MCP do GitHub não estiver configurado, informe:
   > "Este comando requer o MCP do GitHub. Configure-o com:
