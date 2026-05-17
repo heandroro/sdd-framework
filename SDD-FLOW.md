@@ -103,6 +103,7 @@ flowchart LR
     end
 
     subgraph MANUAL["Invocação manual"]
+        P0["/init-memory-bank"]
         P1["/criar-spec"]
         P2["/revisar-spec"]
         P3["/gerar-tasks"]
