@@ -27,6 +27,7 @@
 | `T-MIG` | Migração | Migrations de banco, scripts de transformação de dados |
 | `T-CFG` | Configuração | Infra, variáveis de ambiente, feature flags, CI/CD |
 | `T-APM` | Application Performance Monitor / Observabilidade | **Obrigatório** — instrumentação, alertas, dashboard |
+| `T-DOC` | Documentação / Memory Bank | **Obrigatório** — atualização dos artefatos do Memory Bank |
 
 | ID | Task | Tipo | Refs | Status |
 |----|------|------|------|--------|
@@ -37,6 +38,9 @@
 | T-APM-03 | Custom events | **Application Performance Monitor** | [APM-Ex] | `[ ]` |
 | T-APM-04 | Alertas | **Application Performance Monitor** | [ALT-xx] | `[ ]` |
 | T-APM-05 | Dashboard | **Application Performance Monitor** | — | `[ ]` |
+| T-DOC-01 | Promover decisões arquiteturais | **Documentação** | — | `[ ]` |
+| T-DOC-02 | Atualizar KNOWLEDGE.md | **Documentação** | — | `[ ]` |
+| T-DOC-03 | Verificar product.md | **Documentação** | — | `[ ]` |
 
 ---
 
@@ -200,6 +204,74 @@
 
 ---
 
+## Tasks de Documentação / Memory Bank
+
+> **Estas tasks são obrigatórias** (constitution.md, Princípio 9).
+> Devem ser executadas para que o ciclo da spec seja considerado fechado.
+
+---
+
+### T-DOC-01 — Promover Decisões Arquiteturais para `architecture.md`
+
+**Tipo**: Documentação / Memory Bank
+
+**Descrição**:
+> Revisar o `design.md` desta spec e promover para `architecture.md` qualquer
+> decisão técnica que deva persistir além do escopo desta feature (ex: novos
+> padrões adotados, tecnologias introduzidas, restrições de design).
+
+**Subtasks**:
+- [ ] Ler a seção de decisões técnicas do `design.md`
+- [ ] Identificar decisões com impacto transversal (afetam outros serviços/features)
+- [ ] Adicionar entradas relevantes em `architecture.md`
+- [ ] Confirmar que nada no `design.md` contradiz o `architecture.md` atualizado
+
+**Critério de conclusão**:
+- [ ] `architecture.md` reflete as decisões desta spec que têm valor duradouro
+- [ ] Nenhuma contradição entre `design.md` e `architecture.md`
+
+---
+
+### T-DOC-02 — Atualizar `KNOWLEDGE.md` com Padrões e Lições Aprendidas
+
+**Tipo**: Documentação / Memory Bank
+
+**Descrição**:
+> Registrar em `KNOWLEDGE.md` os padrões emergentes e lições aprendidas
+> durante a implementação desta spec.
+
+**Subtasks**:
+- [ ] Listar padrões de código ou processos adotados nesta feature que não estavam documentados
+- [ ] Listar decisões pontuais tomadas (com contexto e justificativa)
+- [ ] Adicionar entradas em `KNOWLEDGE.md → Padrões Emergentes` e/ou `Decisões e Aprendizados`
+- [ ] Atualizar as FAQs de `KNOWLEDGE.md` se alguma dúvida recorrente surgiu
+
+**Critério de conclusão**:
+- [ ] Seção `Padrões Emergentes` de `KNOWLEDGE.md` atualizada (se aplicável)
+- [ ] Seção `Decisões e Aprendizados` de `KNOWLEDGE.md` atualizada com data e contexto
+
+---
+
+### T-DOC-03 — Verificar Consistência de `product.md`
+
+**Tipo**: Documentação / Memory Bank
+
+**Descrição**:
+> Verificar se esta feature impacta KPIs, personas, objetivos de negócio ou
+> roadmap registrados em `product.md` e atualizar conforme necessário.
+
+**Subtasks**:
+- [ ] Comparar os requisitos funcionais desta spec com os KPIs de `product.md`
+- [ ] Verificar se novos KPIs de negócio foram criados ou modificados
+- [ ] Verificar se novas personas ou mudanças de persona foram identificadas
+- [ ] Atualizar `product.md` se algum item acima se aplicar
+
+**Critério de conclusão**:
+- [ ] `product.md` está consistente com o estado atual do produto após esta entrega
+- [ ] Qualquer KPI novo está vinculado a uma métrica APM em `apm-standards.md`
+
+---
+
 ## Checklist Final de Entrega
 
 > Execute este checklist antes de considerar a feature completa.
@@ -222,7 +294,13 @@ Qualidade:
   [ ] Sem dados PII/sensíveis na telemetria
   [ ] SLOs de design.md validados em staging
 
+Documentação / Memory Bank:
+  [ ] T-DOC-01: Decisões arquiteturais promovidas para architecture.md
+  [ ] T-DOC-02: Padrões emergentes e lições registrados em KNOWLEDGE.md
+  [ ] T-DOC-03: product.md verificado e atualizado se necessário
+
 Spec-first (descarte):
   [ ] Após entrega, este spec pode ser arquivado ou descartado
-  [ ] Qualquer informação arquitetural relevante foi promovida para architecture.md
+  [ ] Memory Bank atualizado (T-DOC-01 a T-DOC-03 concluídas)
+  [ ] Retrospectiva do ciclo oferecida ao humano (ver AGENTS.md → Retrospectiva do Ciclo)
 ```
