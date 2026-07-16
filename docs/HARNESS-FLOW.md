@@ -187,7 +187,7 @@ Sensores inferenciais ████████████░░░░░░░�
 Sensores computacionais ████░░░░░░░░░░░░░░░░ em construção → sdd-validate
 ```
 
-O spec [harness-sensors](.sdd/specs/harness-sensors/tasks.md) endereça essa lacuna
+O spec [harness-sensors](../.sdd/specs/harness-sensors/tasks.md) endereça essa lacuna
 adicionando o primeiro sensor computacional do framework.
 
 ---
@@ -197,4 +197,4 @@ adicionando o primeiro sensor computacional do framework.
 - [Harness Engineering for Coding Agent Users](https://martinfowler.com/articles/harness-engineering.html) — Birgitta Böckeler, Abr/2026
 - [SDD-FLOW.md](SDD-FLOW.md) — Diagramas do ciclo SDD completo
 - [NIVEL-SDD.md](NIVEL-SDD.md) — Análise comparativa dos três níveis de SDD
-- [.sdd/specs/harness-sensors/](.sdd/specs/harness-sensors/tasks.md) — Spec de implementação do `sdd-validate`
+- [.sdd/specs/harness-sensors/](../.sdd/specs/harness-sensors/tasks.md) — Spec de implementação do `sdd-validate`

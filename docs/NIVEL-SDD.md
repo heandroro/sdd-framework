@@ -39,7 +39,7 @@
 ### Contras
 
 - **Sem rastreabilidade histórica por feature** — após o descarte, não há como rever por que uma decisão pontual foi tomada naquele sprint (mitigado pelos ADRs)
-- **Overhead por feature** — criar spec completa para cada entrega tem custo; não vale para bugs pequenos
+- **Overhead por feature** — criar spec completa para cada entrega tem custo; não vale para bugs pequenos (mitigado pelo JIT Spec, que cobre mudanças pequenas com um contrato de artefato único e um único gate)
 - **Requer disciplina de promoção** — se decisões arquiteturais não forem promovidas para `architecture.md` antes do descarte, o conhecimento se perde
 - **Não adequado para sistemas regulados** — ambientes que exigem auditoria de decisões por feature precisam de spec permanente
 
@@ -49,6 +49,9 @@
 - Times com cadência ágil (sprints curtos)
 - Projetos onde o código é a fonte de verdade, não a documentação
 - Quando a IA é usada como par de programação, não como executor autônomo
+
+> Nota: para mudanças pequenas, o JIT Spec é uma alternativa mais leve ao
+> ciclo Spec-First acima — não uma etapa dele. Ver [JIT.md](JIT.md).
 
 ---
 

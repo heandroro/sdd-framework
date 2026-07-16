@@ -1,6 +1,6 @@
 ---
 name: sdd-workflow
-description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow, checklists, and behavioral rules for each stage of the cycle.
+description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow and checklists for the full cycle, plus the lighter JIT Spec alternative for small changes.
 ---
 
 # SDD Workflow
@@ -13,6 +13,34 @@ Consulte quando o usuário estiver:
 - Executando tasks de um `tasks.md`
 - Promovendo decisões para `architecture.md` ou `adr/`
 - Usando os comandos `/criar-spec`, `/revisar-spec`, `/gerar-tasks`, `/promover-adr`
+
+## Tamanho ideal de problema
+
+| Tamanho | Recomendação |
+|---|---|
+| Mudança trivial (typo, cosmético) | Sem spec — direto ao código |
+| Mudança pequena | **JIT Spec** — artefato único, 1 gate humano (ver abaixo) |
+| Feature média (3–8 pontos) | **Use o fluxo completo** |
+| Feature grande | Quebre em sub-specs antes de iniciar |
+| Produto novo | Comece pelo memory bank; uma spec por feature |
+
+## Fluxo JIT Spec (mudanças pequenas)
+
+> Alternativa ao ciclo completo descrito abaixo — não uma etapa dele.
+
+Contrato efêmero de **artefato único** (≤ ~20 linhas), derivado do memory bank,
+com **um único gate humano**. Elegibilidade: 1 componente, ≤2 arquivos de
+produção estimados, sem decisão arquitetural nova, sem telemetria nova.
+
+Regras:
+- O artefato contém: intenção (1–2 frases), critérios de aceite, componentes tocados, verificação da telemetria APM existente
+- **Anti-formalismo é requisito**: sem IDs REQ-x, sem tabelas GIVEN/WHEN/THEN, sem OBS-x, sem checklists — se o formato do ciclo completo aparecer, degenerou em "SDD em miniatura"
+- Derive do memory bank — não pergunte ao humano o que o projeto já sabe
+- Implementação só após aprovação humana do contrato inteiro
+- Se a elegibilidade estourar durante a execução: **pare** e proponha promoção para spec completa
+- No fechamento: entrada no CHANGELOG obrigatória; ADR se mudou decisão arquitetural; artefato descartado
+
+Para mais contexto e o exemplo de artefato preenchido, LOAD docs/JIT.md.
 
 ## Visão geral do ciclo
 
@@ -54,11 +82,4 @@ Para os checklists de cada etapa, LOAD references/checklists.md.
 - Task ambígua com múltiplas interpretações válidas
 - Requisito de observabilidade incompleto ou inconsistente
 
-## Tamanho ideal de problema
-
-| Tamanho | Recomendação |
-|---|---|
-| Bug pequeno | Não use SDD — vá direto ao código |
-| Feature média (3–8 pontos) | **Use o fluxo completo** |
-| Feature grande | Quebre em sub-specs antes de iniciar |
-| Produto novo | Comece pelo memory bank; uma spec por feature |
+Para o fluxo completo de cada etapa do ciclo, LOAD references/workflow.md.

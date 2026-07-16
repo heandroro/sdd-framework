@@ -61,8 +61,11 @@ A: Reporte ao humano. Mova os detalhes técnicos para design.md e mantenha
    requirements.md no nível funcional.
 
 **Q: Com que tamanho de problema devo usar o fluxo completo SDD?**
-A: Problemas de tamanho médio (estimativa 3–8 pontos). Para bugs pequenos
-   ou mudanças triviais, o fluxo completo é overhead desnecessário.
+A: Problemas de tamanho médio (estimativa 3–8 pontos). Mudanças triviais
+   (typo, cosmético) vão direto ao código, sem spec. Mudanças pequenas
+   (1 componente, ≤2 arquivos, sem decisão arquitetural ou telemetria nova)
+   usam o **JIT Spec** — uma alternativa ao fluxo completo, não uma etapa
+   dele: contrato de artefato único com um gate humano (ver `JIT.md`).
 
 **Q: Como saber se um spec-first está terminado e pode ser descartado?**
 A: Quando o checklist final de `tasks.md` estiver 100% marcado e o humano

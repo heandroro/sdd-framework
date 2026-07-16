@@ -4,6 +4,37 @@
 > em [Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
 > (Martin Fowler, Out/2025), integrado ao **Agent Package Manager**.
 
+<details>
+<summary><strong>Índice</strong></summary>
+
+- [O que é Spec-Driven Development (SDD)?](#o-que-é-spec-driven-development-sdd)
+  - [O problema](#o-problema)
+  - [A solução](#a-solução)
+  - [Os três níveis de SDD](#os-três-níveis-de-sdd)
+  - [Por que spec-first?](#por-que-spec-first)
+- [O que este framework entrega](#o-que-este-framework-entrega)
+- [Memory Bank](#memory-bank)
+- [Estrutura de pastas](#estrutura-de-pastas)
+- [Agent Package Manager (APM CLI)](#agent-package-manager-apm-cli)
+- [Fluxo de trabalho](#fluxo-de-trabalho)
+  - [Tamanho ideal de problema](#tamanho-ideal-de-problema)
+  - [Quebrando features grandes em sub-specs](#quebrando-features-grandes-em-sub-specs)
+- [Integração com Application Performance Monitor (Observabilidade)](#integração-com-application-performance-monitor-observabilidade)
+- [Como criar uma nova spec](#como-criar-uma-nova-spec)
+- [Ciclo de vida do projeto](#ciclo-de-vida-do-projeto)
+  - [1. Criação do repositório](#1-criação-do-repositório)
+  - [2. Feature nova](#2-feature-nova)
+  - [3. Bug fix](#3-bug-fix)
+  - [4. Deploy](#4-deploy)
+  - [5. Manutenção contínua do memory bank](#5-manutenção-contínua-do-memory-bank)
+- [CHANGELOG](#changelog)
+- [Commits semânticos](#commits-semânticos)
+- [Versionamento](#versionamento)
+- [Referências](#referências)
+- [Licença](#licença)
+
+</details>
+
 ---
 
 ## O que é Spec-Driven Development (SDD)?
@@ -41,9 +72,17 @@ se relaciona com o código ao longo do tempo:
 | **Spec-Anchored** | Spec → Código | Mantida como artefato vivo, atualizada a cada mudança | APIs públicas, sistemas regulados |
 | **Spec-as-Source** | Spec → Código (IA autônoma) | A spec **é** o código | Scaffolding, boilerplate, prototipagem |
 
-> Para análise detalhada de prós, contras e quando usar cada nível, veja [NIVEL-SDD.md](NIVEL-SDD.md).
+> Para análise detalhada de prós, contras e quando usar cada nível, veja [NIVEL-SDD.md](docs/NIVEL-SDD.md).
 
-> Para entender como a LLM agrega contexto, os riscos da context window e como o framework se integra com diferentes harnesses de IDE, veja [LLM-CONTEXT.md](LLM-CONTEXT.md).
+> Para entender como a LLM agrega contexto, os riscos da context window e como o framework se integra com diferentes harnesses de IDE, veja [LLM-CONTEXT.md](docs/LLM-CONTEXT.md).
+
+> JIT Spec é uma alternativa ao ciclo SDD completo para mudanças pequenas — não uma etapa dele. Veja [JIT.md](docs/JIT.md).
+
+> Para a documentação completa do Agent Package Manager (APM CLI) — primitivos, ciclo PKG e integração com `.sdd/` — veja [AGENT-PACKAGE-MANAGER.md](docs/AGENT-PACKAGE-MANAGER.md).
+
+> Para entender o SDD Framework pela lente de Harness Engineering (guias, sensores, steering loop), veja [HARNESS-FLOW.md](docs/HARNESS-FLOW.md) e exemplos de sessão em [HARNESS-SESSION.md](docs/HARNESS-SESSION.md).
+
+> Para os diagramas de referência do ciclo SDD completo, veja [SDD-FLOW.md](docs/SDD-FLOW.md); para exemplos de sessão de cada etapa, veja [SDD-SESSION.md](docs/SDD-SESSION.md).
 
 ### Por que spec-first?
 
@@ -63,6 +102,7 @@ Este framework é uma estrutura **agnóstica de tecnologia** para praticar SDD c
 |---|---|---|
 | **Memory Bank** | Contexto permanente do projeto lido pelo agente no início de toda sessão | `.sdd/memory-bank/` |
 | **Ciclo SDD** | Templates e fluxo para requirements → design → tasks com aprovação humana | `.sdd/specs/` |
+| **JIT Spec** | Contrato efêmero de artefato único para mudanças pequenas, com um único gate humano | `.sdd/jit/` |
 | **Observabilidade obrigatória** | Cada spec define explicitamente métricas, traces, alertas e dashboards | Seções APM-x em `design.md` |
 | **Agent Package Manager (APM CLI)** | Ciclo independente para empacotar instruções, prompts e skills para o agente | `.apm/` + `apm.yml` |
 
@@ -121,6 +161,9 @@ projeto/
 │   │   ├── _template.md               ← Template de ADR (copiar para cada decisão)
 │   │   └── ADR-01-titulo.md           ← Uma decisão por arquivo
 │   │
+│   ├── jit/                           ← Artefatos JIT Spec (efêmeros — mudanças pequenas)
+│   │   └── <nome>.md                  ← Um único arquivo, descartado após o merge
+│   │
 │   └── specs/
 │       ├── _template/                 ← Templates base (copiar para cada feature)
 │       │   ├── requirements.md        ← Requisitos funcionais + observabilidade
@@ -137,172 +180,27 @@ projeto/
 ├── AGENTS.md                          ← Auto-descoberto por agentes de IA (deve estar na raiz)
 ├── apm.yml                            ← Manifesto do pacote APM CLI
 │
+├── docs/                              ← Documentação de referência (níveis SDD, JIT, harness, APM CLI...)
+│   └── ...
+│
 └── src/                               ← Código da aplicação
     └── ...
 ```
 
 ---
 
-## Primitivos do Agent Package Manager (APM CLI)
+## Agent Package Manager (APM CLI)
 
-O APM CLI empacota **contexto e comportamento** para o agente de IA em cinco tipos de primitivos.
-Cada tipo serve a um propósito distinto e é ativado de uma forma diferente.
+O APM CLI é um **ciclo independente do SDD** que empacota contexto e
+comportamento para o agente de IA (Instructions, Prompts, Agents, Skills,
+Hooks) e pode ser executado antes, em paralelo ou depois do ciclo SDD.
 
-### Instructions
-
-Regras que o agente aplica **automaticamente** ao trabalhar com arquivos que correspondem a um padrão glob.
-Não precisam ser invocadas pelo usuário — entram em vigor sempre que o agente toca um arquivo coberto pelo padrão.
-
-**Quando usar**: impor convenções de código, nomeclatura, padrões de arquitetura ou restrições por domínio.
-
-**Exemplo** — `.apm/instructions/backend-api.instructions.md`:
-```markdown
----
-applyTo: "src/api/**/*.ts"
----
-
-# Convenções de API
-
-- Todo endpoint deve ter um trace distribuído iniciado no controller
-- Nunca exponha stack traces em respostas HTTP — logue internamente e retorne código de erro genérico
-- Nomes de rota seguem kebab-case: /user-profiles, não /userProfiles
-- Validação de entrada obrigatória antes de qualquer acesso ao banco
-```
-
----
-
-### Prompts
-
-Comandos invocados **explicitamente pelo usuário** — geralmente com `/nome-do-comando` ou via menu de ações.
-São templates de prompt enriquecidos com contexto do workspace que executam uma tarefa específica.
-
-**Quando usar**: operações recorrentes que exigem contexto do projeto (criar spec, revisar PR, gerar ADR).
-
-**Exemplo** — `.apm/prompts/criar-spec.prompt.md`:
-```markdown
----
-name: Criar spec SDD
-description: Gera o requirements.md inicial para uma nova feature
----
-
-Você é um analista SDD. Leia o memory bank em `.sdd/memory-bank/` e crie
-o `requirements.md` para a feature abaixo seguindo o template em
-`.sdd/specs/_template/requirements.md`.
-
-Feature: {{input:Descreva a feature em uma frase}}
-
-Separe requisitos funcionais de técnicos. Inclua as seções OBS-x de
-observabilidade. Não tome decisões técnicas — isso vai para design.md.
-```
-
----
-
-### Agents
-
-**Personas especializadas** invocadas com `@nome`. Funcionam como um agente dedicado com propósito,
-conjunto de ferramentas e instrução de sistema próprios.
-
-**Quando usar**: fluxos complexos com papel bem definido (revisor de spec, gerador de testes, especialista em observabilidade).
-
-**Exemplo** — `.apm/agents/sdd-reviewer.agent.md`:
-```markdown
----
-name: sdd-reviewer
-description: Revisa specs SDD verificando completude, rastreabilidade e cobertura de observabilidade
----
-
-Você é um revisor SDD experiente. Ao receber um spec para revisão:
-
-1. Verifique se cada REQ-x.x tem correspondência em design.md
-2. Verifique se cada OBS-x em requirements.md tem APM-Mx ou APM-Ex em design.md
-3. Aponte requisitos funcionais com detalhes técnicos indevidos
-4. Confirme que o checklist final de tasks.md cobre promoção para architecture.md
-
-Responda sempre com: ✅ aprovado / ⚠️ ajustes necessários / ❌ bloqueado.
-```
-
----
-
-### Skills
-
-Guias de conhecimento consultados **automaticamente pelo agente** quando o contexto é relevante.
-Diferente de instructions (que são regras), skills são **documentação consultável** — o agente decide
-quando ler com base na tarefa em andamento.
-
-**Quando usar**: capturar conhecimento de domínio, fluxos complexos, guias de decisão que o agente
-deve consultar em vez de memorizar.
-
-**Exemplo** — `.apm/skills/observability-design/SKILL.md`:
-```markdown
-# Guia de Observability Design
-
-## Quando consultar este guia
-Consulte quando for preencher a seção "Observability Design" de um design.md.
-
-## O que toda feature deve ter
-
-**Métricas (APM-Mx)**:
-- Ao menos uma métrica de latência (p50, p95, p99)
-- Ao menos uma métrica de taxa de erro
-- Métricas de negócio relevantes para o domínio (ex: `orders.placed.count`)
-
-**Eventos de negócio (APM-Ex)**:
-- Um evento por transação de negócio significativa
-- Payload sem dados PII — use IDs opacos, nunca e-mail ou CPF
-
-**SLOs mínimos**:
-- Latência p95 < threshold definido em architecture.md
-- Taxa de erro < 1% em condições normais
-```
-
----
-
-### Hooks
-
-Callbacks executados **antes ou depois** de chamadas de ferramenta do agente (`PreToolUse` / `PostToolUse`).
-Permitem validar, enriquecer ou bloquear ações do agente de forma programática.
-
-**Quando usar**: guardrails de segurança, validações automáticas, logging de auditoria de ações do agente.
-
-**Exemplo** — `.apm/hooks/proteger-producao.json`:
-```json
-{
-  "hooks": [
-    {
-      "type": "PreToolUse",
-      "tool": "write_file",
-      "condition": "filepath contains 'config/production'",
-      "action": "block",
-      "message": "Escrita direta em config de produção bloqueada. Use variáveis de ambiente ou o pipeline de deploy."
-    }
-  ]
-}
-```
+Para os cinco tipos de primitivo com exemplos, o ciclo PKG-1 → PKG-2 → PKG-3
+e como `.sdd/` e `.apm/` se integram, veja **[AGENT-PACKAGE-MANAGER.md](docs/AGENT-PACKAGE-MANAGER.md)**.
 
 ---
 
 ## Fluxo de trabalho
-
-**Ciclo Agent Package Manager (APM CLI)** (ciclo interno sequencial e obrigatório — pode ser iniciado antes, em paralelo ou depois do ciclo SDD):
-
-```
- ┌──────────────────┐
- │  PKG-1           │  → Definir primitivos necessários em agent-context.md
- │  PRIMITIVOS      │    (Instructions, Prompts, Agents, Skills, Hooks, MCP)
- └────────┬─────────┘
-          │  Revisão humana obrigatória
-          ▼
- ┌──────────────────┐
- │  PKG-2           │  → Design técnico dos primitivos + apm.yml + targets alvo
- │  DESIGN          │
- └────────┬─────────┘
-          │  Revisão humana obrigatória
-          ▼
- ┌──────────────────┐
- │  PKG-3           │  → T-PKG-01 a T-PKG-04: criar arquivos, compilar, validar
- │  EXECUÇÃO        │    por target (apm install + apm compile)
- └──────────────────┘
-```
 
 **Ciclo SDD** (spec-first, sequencial com aprovação humana em cada etapa):
 
@@ -329,15 +227,21 @@ Permitem validar, enriquecer ou bloquear ações do agente de forma programátic
 
 ### Tamanho ideal de problema
 
-SDD introduz overhead cognitivo. Use este framework para problemas de tamanho
-**médio** (3–8 pontos de story), onde o custo de formalizar o spec é justificável.
+SDD introduz overhead cognitivo — o rigor deve ser proporcional ao tamanho do
+problema. Antes de começar, decida qual dos três caminhos a mudança segue —
+eles são **alternativos**, nunca combinados:
 
-| Tamanho        | Recomendação                                          |
-|----------------|-------------------------------------------------------|
-| Bug pequeno    | Não use SDD — vá direto ao código com IA              |
-| Feature média  | **Use este framework** (fluxo completo)               |
-| Feature grande | Quebre em múltiplas specs menores (ver abaixo)        |
-| Produto novo   | Comece pelo memory bank; depois uma spec por feature  |
+| Tamanho         | Recomendação                                                        |
+|-----------------|---------------------------------------------------------------------|
+| Mudança trivial | Sem spec — direto ao código com IA (typo, comentário, ajuste cosmético) |
+| Mudança pequena | **JIT Spec** — contrato de artefato único, 1 gate humano (ver [JIT.md](docs/JIT.md)) |
+| Feature média   | **Ciclo completo** (requirements → design → tasks)                  |
+| Feature grande  | Quebre em múltiplas specs menores (ver abaixo)                      |
+| Produto novo    | Comece pelo memory bank; depois uma spec por feature                |
+
+Para o fluxo completo do JIT Spec — elegibilidade, regras do artefato,
+exemplo preenchido e comparação lado a lado com o ciclo SDD completo — veja
+**[JIT.md](docs/JIT.md)**.
 
 #### Quebrando features grandes em sub-specs
 
@@ -363,44 +267,6 @@ por componente independente. Cada sub-spec tem seu próprio ciclo SDD completo:
 > ou `design.md` com mais de 2 domínios de negócio distintos.
 > O `tasks.md` dentro de cada sub-spec permanece um **arquivo único** —
 > a divisão é por escopo de feature, não por volume de tasks.
-
----
-
-## Integração entre `.sdd/` e `.apm/`
-
-Os dois ciclos são independentes mas se complementam. O `.sdd/` **define intenção**;
-o `.apm/` **entrega execução** para o agente de IA.
-
-```mermaid
-flowchart LR
-  subgraph sdd [".sdd/"]
-    mb["memory-bank/\napm-standards.md\narchitecture.md"]
-    ac["specs/&lt;feature&gt;/\nagent-context.md"]
-  end
-
-  subgraph apm [".apm/"]
-    primitivos["instructions/\nprompts/\nagents/\nskills/\nhooks/"]
-    yml["apm.yml"]
-  end
-
-  ac -->|"PKG-1 → PKG-2 → PKG-3\n(T-PKG-01~04)"| primitivos
-  mb -->|"naming conventions\ne MCP permitidos"| yml
-  ac -->|"define manifesto"| yml
-```
-
-**Pontos de integração:**
-
-| Arquivo em `.sdd/` | Referencia / alimenta | Arquivo em `.apm/` |
-|---|---|---|
-| `specs/<feature>/agent-context.md` | Define e origina | `instructions/`, `prompts/`, `agents/`, `skills/`, `hooks/` |
-| `memory-bank/apm-standards.md` | Contém naming conventions usadas em | `apm.yml` (IDs de primitivos PKG-x) |
-| `memory-bank/architecture.md` | Informa quais MCP servers são permitidos em | `apm.yml` |
-
-**O que não cruza os limites:**
-
-- Specs SDD (`requirements.md`, `design.md`, `tasks.md`) não são lidas pelo Agent Package Manager (APM CLI)
-- Primitivos em `.apm/` não substituem o memory bank — ensinam comportamento ao agente, não capturam decisões de produto ou arquitetura
-- `apm.yml` não é um spec — é um manifesto de empacotamento, não de requisitos
 
 ---
 
@@ -482,20 +348,28 @@ Passos para adotar o framework em um projeto novo:
 ### 3. Bug fix
 
 > Bug fixes geralmente **não justificam** o ciclo SDD completo.
-> Use a tabela de tamanho de problema como guia.
+> Use a tabela de tamanho de problema como guia: trivial → direto ao código,
+> pequeno → **JIT Spec**, complexo → mini-spec.
 >
 > **Artefatos permanentes de um bug fix:**
 > - Commit message (sempre)
 > - Entrada `Fixed` no CHANGELOG (obrigatório)
 > - ADR (somente se a correção implicou em mudança arquitetural)
-> — Spec e mini-spec são sempre descartados após o merge
+> — Spec, mini-spec e artefato JIT são sempre descartados após o merge
 
 ```
-Bug simples (causa conhecida, mudança localizada):
+Bug trivial (typo, ajuste cosmético, sem mudança de comportamento):
   1. Crie a branch: git checkout -b fix/<nome>
-  2. Corrija, teste e valide que a telemetria Application Performance Monitor existente cobre o cenário
+  2. Corrija e teste — sem spec
   3. Pull Request → Merge
-  — Sem spec, sem ADR (a menos que a correção mude uma decisão arquitetural)
+
+Bug pequeno (causa conhecida, mudança localizada) — use o fluxo JIT Spec:
+  1. Crie a branch: git checkout -b fix/<nome>
+  2. Gere o JIT Spec (artefato único derivado do memory bank) → aprovação humana
+  3. Corrija, teste e valide que a telemetria Application Performance Monitor existente cobre o cenário
+  4. Pull Request → Merge → Descarte o artefato JIT
+  — Se durante a correção surgir decisão arquitetural ou necessidade de
+     telemetria nova, pare e promova para spec completa (regra de escalada)
 
 Bug complexo (causa desconhecida, impacto amplo):
   1. Crie a branch: git checkout -b fix/<nome>
@@ -623,7 +497,13 @@ derivado diretamente dos commits semânticos:
 
 ## Referências
 
-- [NIVEL-SDD.md](NIVEL-SDD.md) — Análise comparativa dos três níveis SDD (prós, contras, quando usar)
+- [NIVEL-SDD.md](docs/NIVEL-SDD.md) — Análise comparativa dos três níveis SDD (prós, contras, quando usar)
+- [JIT.md](docs/JIT.md) — JIT Spec: alternativa leve ao ciclo SDD completo para mudanças pequenas
+- [AGENT-PACKAGE-MANAGER.md](docs/AGENT-PACKAGE-MANAGER.md) — Agent Package Manager (APM CLI): primitivos, ciclo PKG e integração com `.sdd/`
+- [SDD-FLOW.md](docs/SDD-FLOW.md) — Diagramas de referência do ciclo SDD completo
+- [SDD-SESSION.md](docs/SDD-SESSION.md) — Exemplos de sessão para cada etapa do ciclo SDD
+- [HARNESS-FLOW.md](docs/HARNESS-FLOW.md) — SDD Framework pela lente de Harness Engineering: guias, sensores e steering loop
+- [HARNESS-SESSION.md](docs/HARNESS-SESSION.md) — Exemplos de sessão mostrando guias e sensores do harness em ação
 - [Spec-Driven Development — Birgitta Böckeler (martinfowler.com)](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
 - [GitHub spec-kit](https://github.com/github/spec-kit)
 - [Kiro](https://kiro.dev/)
@@ -640,7 +520,7 @@ derivado diretamente dos commits semânticos:
 
 MIT License
 
-Copyright (c) 2026 
+Copyright (c) 2026 Leandro Yamaniha
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
