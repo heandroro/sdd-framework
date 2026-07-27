@@ -102,7 +102,7 @@ Este framework é uma estrutura **agnóstica de tecnologia** para praticar SDD c
 |---|---|---|
 | **Memory Bank** | Contexto permanente do projeto lido pelo agente no início de toda sessão | `.sdd/memory-bank/` |
 | **Ciclo SDD** | Templates e fluxo para requirements → design → tasks com aprovação humana | `.sdd/specs/` |
-| **JIT Spec** | Contrato efêmero de artefato único para mudanças pequenas, com um único gate humano | `.sdd/jit/` |
+| **JIT Spec** | Contrato efêmero de artefato único para mudanças pequenas, com um único gate humano — independente do ciclo SDD | `.jit/` |
 | **Observabilidade obrigatória** | Cada spec define explicitamente métricas, traces, alertas e dashboards | Seções APM-x em `design.md` |
 | **Agent Package Manager (APM CLI)** | Ciclo independente para empacotar instruções, prompts e skills para o agente | `.apm/` + `apm.yml` |
 
@@ -161,9 +161,6 @@ projeto/
 │   │   ├── _template.md               ← Template de ADR (copiar para cada decisão)
 │   │   └── ADR-01-titulo.md           ← Uma decisão por arquivo
 │   │
-│   ├── jit/                           ← Artefatos JIT Spec (efêmeros — mudanças pequenas)
-│   │   └── <nome>.md                  ← Um único arquivo, descartado após o merge
-│   │
 │   └── specs/
 │       ├── _template/                 ← Templates base (copiar para cada feature)
 │       │   ├── requirements.md        ← Requisitos funcionais + observabilidade
@@ -179,6 +176,9 @@ projeto/
 │
 ├── AGENTS.md                          ← Auto-descoberto por agentes de IA (deve estar na raiz)
 ├── apm.yml                            ← Manifesto do pacote APM CLI
+│
+├── .jit/                              ← Artefatos JIT Spec (efêmeros) — independente de .sdd/
+│   └── <nome>.md                      ← Um único arquivo, descartado após o merge
 │
 ├── docs/                              ← Documentação de referência (níveis SDD, JIT, harness, APM CLI...)
 │   └── ...

@@ -1,6 +1,6 @@
 name: "sdd-framework"
-version: "0.1.0"
-description: "Empacota o workflow Spec-Driven Development (SDD) para agentes de IA. Instala instruções automáticas por glob para specs e memory bank, comandos /criar-spec /revisar-spec /gerar-tasks /promover-adr, a persona @sdd e a skill sdd-workflow com cobertura universal incluindo Codex."
+version: "0.2.0"
+description: "Empacota o workflow Spec-Driven Development (SDD) para agentes de IA. Instala instruções automáticas por glob para specs e memory bank, comandos /criar-spec /revisar-spec /gerar-tasks /promover-adr /validar-spec, a persona @sdd e a skill sdd-workflow (com o sensor computacional sdd-validate) com cobertura universal incluindo Codex."
 
 dependencies:
   apm: []

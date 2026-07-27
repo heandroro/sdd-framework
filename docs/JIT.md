@@ -52,9 +52,9 @@ código, sem spec.
 Anti-formalismo é requisito, não estilo:
 
 - Um único bloco de ~20 linhas: inline na sessão do agente ou em
-  `.sdd/jit/<nome>.md` — pasta separada de `.sdd/specs/`, que é reservada
-  para o ciclo completo (`requirements.md` + `design.md` + `tasks.md`); o
-  JIT Spec não tem essa forma
+  `.jit/<nome>.md`, na raiz — namespace de primeiro nível próprio, fora de
+  `.sdd/`, já que o JIT Spec é uma alternativa independente ao ciclo SDD,
+  não um componente dele
 - **Sem** IDs `REQ-x`, tabelas GIVEN/WHEN/THEN, seções `OBS-x` ou checklists
   — se o formato do ciclo completo aparecer no artefato, o fluxo degenerou
   em "SDD em miniatura"
@@ -98,6 +98,6 @@ Resumo lado a lado dos dois contratos formais que o framework oferece:
 
 ## Onde vive
 
-- Artefato: `.sdd/jit/<nome>.md` (efêmero, descartado após o merge)
-- Especificação formal deste fluxo (enquanto ativa): `.sdd/specs/jit-spec/`
+- Artefato: `.jit/<nome>.md` (raiz, efêmero, descartado após o merge) —
+  fora de `.sdd/`, pois o JIT Spec é independente do ciclo SDD
 - Fluxo operacional que o agente segue: [AGENTS.md](../AGENTS.md) → Workflow JIT Spec

@@ -1,6 +1,6 @@
 ---
 name: sdd-workflow
-description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow and checklists for the full cycle, plus the lighter JIT Spec alternative for small changes.
+description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow and checklists for the full cycle, plus the lighter JIT Spec alternative for small changes and the sdd-validate computational sensor.
 ---
 
 # SDD Workflow
@@ -52,6 +52,16 @@ requirements.md → [aprovação humana] → design.md → [aprovação humana] 
 
 Para detalhes completos de cada etapa, LOAD references/workflow.md.
 Para os checklists de cada etapa, LOAD references/checklists.md.
+
+## Validação automática (sdd-validate)
+
+Antes de `/revisar-spec` e depois de `/gerar-tasks`, rode o comando
+`/validar-spec` — um sensor computacional determinístico (não substitui a
+revisão humana, mas pega erros estruturais antes dela: IDs duplicados,
+seções obrigatórias ausentes, T-APM-01 a T-APM-05 faltando, rastreabilidade
+`[REQ-x.x]` incompleta). Corrija o que o validador reportar como `error`
+antes de apresentar a spec ao humano. Detalhes de invocação em
+`.apm/prompts/validar-spec.prompt.md`.
 
 ## Regras fundamentais (constitution.md)
 

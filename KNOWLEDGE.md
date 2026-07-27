@@ -25,7 +25,39 @@
 > Documente aqui padrões que foram adotados na prática, mesmo que não estejam
 > explicitamente na constitution ou architecture.
 
-_Nenhum padrão emergente documentado ainda._
+- **Mudanças de processo/comportamento do próprio framework** (sem API, sem
+  dado, sem primitivo `.apm/` novo — ex: JIT Spec, futuras camadas da
+  pirâmide Context → SDD → Harness → Loop, issue #3) não cabem bem no
+  `design.md` genérico de `_template/` (pensado para software com API/dados)
+  nem no `agent-context.md` (pensado para empacotar primitivos). Para esse
+  tipo de mudança, entregar direto como documentação/instrução de agente e
+  promover a decisão para cá é preferível a forçar um `design.md` com seções
+  que não se aplicam.
+
+- **Sensor computacional para spec** (`sdd-validate`, `.sdd/specs/harness-sensors/`):
+  quando uma feature é, ela mesma, um CLI síncrono de processo único (sem
+  chamadas de rede), o modelo APM padrão do framework se adapta assim:
+  traces = N/A (documentado, não omitido); métricas (Counter/Histogram) sem
+  um SDK real de métricas viram apenas campos de um evento `ValidationRun`
+  emitido como JSON line em **stderr** — nunca em stdout, para não quebrar o
+  contrato `--format=json` que precisa continuar sendo um único documento
+  JSON parseável. A escolha de runtime (Node.js/TypeScript) foi
+  deliberadamente deixada em aberto no `design.md` e resolvida só na
+  primeira task de implementação (T-IMP-01), depois de checar que não havia
+  nenhum sinal de linguagem já em uso no repositório.
+
+- **Declaração vs. menção ao parsear IDs de spec** (`REQ-x.x`, `OBS-x`,
+  `APM-Mx`/`APM-Ex`, `T-IMP/APM/DOC-xx`): checar unicidade/presença de IDs
+  por regex simples gera falsos positivos, porque specs reais citam IDs em
+  prosa como exemplo (`` `REQ-1.1` `` entre crases, "APM-M1..M5" em
+  checklist, "OBS-1 → APM-M1..M4" em mapeamentos) sem que isso seja uma
+  nova declaração. Um ID só deve contar para regras de unicidade/presença
+  quando é o conteúdo de uma célula de tabela (célula só de IDs/separadores,
+  cobrindo listas como "OBS-1, OBS-4") ou está envolto em `**[ID]**`. Esse
+  padrão foi descoberto rodando o próprio `sdd-validate` contra sua spec de
+  origem — um bom lembrete de que testar uma ferramenta de validação de
+  specs contra specs reais do próprio repo expõe bugs que fixtures
+  artificiais não expõem.
 
 ---
 
@@ -35,7 +67,9 @@ _Nenhum padrão emergente documentado ainda._
 
 | Data       | Contexto                  | Decisão / Lição                          |
 |------------|---------------------------|------------------------------------------|
-| [DATA]     | [PREENCHER]               | [PREENCHER]                              |
+| 2026-07-16 | Fechamento da spec `jit-spec` | JIT Spec é uma **alternativa independente** ao ciclo SDD, não um componente dele — nunca aninhar sua documentação ou seu armazenamento dentro de `.sdd/`. Artefatos efêmeros vivem em `.jit/<nome>.md`, na raiz, como namespace de primeiro nível próprio (paralelo a `.apm/` e `.sdd/`). A spec `.sdd/specs/jit-spec/` foi descartada após esta promoção — a entrega real está em `docs/JIT.md`, `AGENTS.md`, `SKILL.md` e `references/workflow.md`. |
+| 2026-07-27 | Implementação da spec `harness-sensors` (`sdd-validate`) | Primeira ferramenta de CLI do framework — decidido que código executável vive em `tools/<nome>/` (pacote Node/TS autocontido), nunca na raiz do repositório (que é 100% documentação). Runtime Node.js/TypeScript escolhido por T-IMP-01 na ausência de qualquer sinal prévio de linguagem no repo. Ver `architecture.md` → "Runtime para ferramentas de CLI do framework" para o registro completo. |
+| 2026-07-27 | T-DOC-03 de `harness-sensors` (verificar `product.md`) | `product.md` está totalmente não inicializado ([PREENCHER] em toda seção) — decidido **não** preencher unilateralmente (persona/KPI de produto é decisão do humano, não do agente). T-DOC-03 fica pendente até uma inicialização de memory bank (`/init-memory-bank`) tratar `product.md` como um todo. |
 
 ---
 
@@ -65,7 +99,7 @@ A: Problemas de tamanho médio (estimativa 3–8 pontos). Mudanças triviais
    (typo, cosmético) vão direto ao código, sem spec. Mudanças pequenas
    (1 componente, ≤2 arquivos, sem decisão arquitetural ou telemetria nova)
    usam o **JIT Spec** — uma alternativa ao fluxo completo, não uma etapa
-   dele: contrato de artefato único com um gate humano (ver `JIT.md`).
+   dele: contrato de artefato único com um gate humano (ver `docs/JIT.md`).
 
 **Q: Como saber se um spec-first está terminado e pode ser descartado?**
 A: Quando o checklist final de `tasks.md` estiver 100% marcado e o humano

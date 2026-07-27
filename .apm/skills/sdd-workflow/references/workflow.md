@@ -39,7 +39,7 @@ Mudança trivial (typo, cosmético) → abaixo do JIT: direto ao código, sem sp
 2. Gere o artefato único (≤ ~20 linhas) **derivado do memory bank**: intenção
    (1–2 frases), critérios de aceite, componentes tocados, verificação da
    telemetria APM existente
-3. Valide com o perfil leve do validador de specs (quando disponível)
+3. Valide com `/validar-spec` (perfil leve — sensor computacional, não substitui o gate humano)
 4. Apresente ao humano — **gate único**: o contrato inteiro é aprovado de uma vez
 5. Implemente após aprovação; a revisão seguinte é no diff final
 

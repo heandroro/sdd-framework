@@ -1,0 +1,30 @@
+{
+  "summary": {
+    "specsScanned": 1,
+    "filesScanned": 3,
+    "errors": 2,
+    "warnings": 0,
+    "durationMs": 0
+  },
+  "results": [
+    {
+      "spec": ".sdd/specs/demo",
+      "findings": [
+        {
+          "ruleId": "R008",
+          "severity": "error",
+          "file": ".sdd/specs/demo/tasks.md",
+          "message": "Task obrigatória ausente: T-APM-03",
+          "suggestion": "Adicione a task T-APM-03 (instrumentação APM) em tasks.md."
+        },
+        {
+          "ruleId": "R008",
+          "severity": "error",
+          "file": ".sdd/specs/demo/tasks.md",
+          "message": "Task obrigatória ausente: T-APM-05",
+          "suggestion": "Adicione a task T-APM-05 (instrumentação APM) em tasks.md."
+        }
+      ]
+    }
+  ]
+}

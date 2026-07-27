@@ -288,6 +288,14 @@ Não requerem um sistema de métricas separado para o CLI.
 
 ### Alertas
 
+> **Status (T-APM-04)**: especificado, **não configurado**. Este repositório
+> não tem hoje nenhum backend de observabilidade real (Datadog, Grafana,
+> etc.) onde essas queries possam ser registradas ou testadas em staging.
+> As duas queries abaixo estão prontas para configuração assim que um
+> backend existir — a decisão de deixá-las apenas documentadas (em vez de
+> tentar simular/fabricar uma configuração) foi tomada explicitamente para
+> este trabalho.
+
 ```yaml
 # ALT-01
 alert:
@@ -313,6 +321,12 @@ alert:
 ---
 
 ### Conceito de Dashboard
+
+> **Status (T-APM-05)**: especificado, **não construído**. Sem backend de
+> observabilidade real, não há onde publicar este dashboard nem URL para
+> compartilhar/registrar em `KNOWLEDGE.md`. O conceito abaixo já mapeia cada
+> painel ao evento/métrica exato que o alimentaria (APM-E1, APM-M4, APM-M5,
+> APM-E3), pronto para implementação quando um backend estiver disponível.
 
 ```mermaid
 block-beta

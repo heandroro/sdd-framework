@@ -79,9 +79,9 @@ flowchart TD
 
 ## Fluxo JIT Spec — mudanças pequenas
 
-> Alternativa ao ciclo SDD completo (Visão Geral acima) — não uma etapa
-> dele. Documentação conceitual completa: [JIT.md](JIT.md). Especificação
-> formal deste fluxo (enquanto ativa): `.sdd/specs/jit-spec/`.
+> Alternativa **independente** ao ciclo SDD completo (Visão Geral acima) —
+> não uma etapa dele. Documentação conceitual completa: [JIT.md](JIT.md).
+> Artefatos vivem em `.jit/<nome>.md`, na raiz, fora de `.sdd/`.
 
 Contrato efêmero de artefato único, derivado do memory bank, com um único
 gate humano.
