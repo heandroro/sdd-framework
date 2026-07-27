@@ -59,6 +59,25 @@
   specs contra specs reais do próprio repo expõe bugs que fixtures
   artificiais não expõem.
 
+- **Skill em 4 quadrantes (SDD / Harness / Loop / Handoff)** — a skill
+  `sdd-workflow` foi reestruturada para expor explicitamente 4 partes.
+  Duas colisões de nome foram resolvidas conscientemente, não por acidente:
+  - **Loop** (o ciclo interno ação→observação→ajuste do agente, com limite
+    determinístico de tentativas) é **diferente** do "Steering Loop" já
+    documentado em `docs/HARNESS-FLOW.md` (retrospectiva humana entre
+    ciclos SDD). Os dois nomes convivem, descrevendo mecanismos distintos
+    — não confundir um com o outro.
+  - **Harness**, como quadrante da skill, é o subconjunto "guardrails &
+    audit" (hoje só orientação textual — constitution imutável,
+    comportamentos proibidos) — não o mesmo "Harness" guarda-chuva que
+    `docs/HARNESS-FLOW.md` usa para o framework inteiro (guias + sensores).
+    Guardrails *enforced* de verdade (não apenas orientação que o agente
+    pode ignorar) mapeiam para **Hooks**, um primitivo APM ainda não usado
+    neste repo (`.apm/hooks/` não existe) — ficou fora de escopo.
+  - **Handoff** (transferência explícita de controle) só cobre humano→IA
+    hoje — handoff agente→agente não é aplicável enquanto só existir o
+    agent `@sdd`; documentado como capacidade futura, não construído.
+
 ---
 
 ## Decisões e Aprendizados

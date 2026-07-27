@@ -1,6 +1,6 @@
 ---
 name: sdd-workflow
-description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow and checklists for the full cycle, plus the lighter JIT Spec alternative for small changes and the sdd-validate computational sensor.
+description: Use when the user is working on files inside .sdd/ or mentions spec, requirements, design, tasks, memory bank, or APM in a spec-driven development context. Provides the complete SDD workflow (contracts), guardrail pointers (Harness), the agent's self-correction loop (Loop), and escalation rules (Handoff) — plus the lighter JIT Spec alternative and the sdd-validate computational sensor.
 ---
 
 # SDD Workflow
@@ -12,7 +12,19 @@ Consulte quando o usuário estiver:
 - Perguntando sobre o ciclo SDD (requirements, design, tasks)
 - Executando tasks de um `tasks.md`
 - Promovendo decisões para `architecture.md` ou `adr/`
-- Usando os comandos `/criar-spec`, `/revisar-spec`, `/gerar-tasks`, `/promover-adr`
+- Usando os comandos `/criar-spec`, `/revisar-spec`, `/gerar-tasks`, `/promover-adr`, `/validar-spec`
+- Repetindo uma correção sem sucesso (LOOP) ou decidindo se precisa parar e pedir decisão humana (HANDOFF)
+
+## Os 4 quadrantes desta skill
+
+- **SDD** — contratos e funções do ciclo requirements→design→tasks (e a
+  alternativa JIT Spec). Conteúdo principal deste arquivo, abaixo.
+- **HARNESS** — guardrails e traços de auditoria. Ver "Harness (guardrails)"
+  mais abaixo.
+- **LOOP** — o ciclo interno de auto-correção do agente (ação → observação
+  → ajuste), com limite determinístico. LOAD references/loop.md.
+- **HANDOFF** — quando e como transferir o controle (hoje: só para o
+  humano). LOAD references/handoff.md.
 
 ## Tamanho ideal de problema
 
@@ -84,12 +96,35 @@ antes de apresentar a spec ao humano. Detalhes de invocação em
 - **NÃO** incluir tokens/secrets literais — sempre usar `${VAR}`
 - **NÃO** misturar detalhes técnicos em `requirements.md`
 
-## Quando reportar ao humano antes de prosseguir
+## LOOP — auto-correção com limite determinístico
 
-- Conflito entre spec e `constitution.md` ou `architecture.md`
-- Task que precisa alterar contrato de interface existente
-- Dependência não listada em `architecture.md`
-- Task ambígua com múltiplas interpretações válidas
-- Requisito de observabilidade incompleto ou inconsistente
+Ciclo interno ação → observação → ajuste (ex: rodar `/validar-spec`, ler os
+`findings`, corrigir, rodar de novo). **Nunca** "tente até dar certo" —
+limite padrão de **3 tentativas** por problema; esgotou sem sucesso →
+aciona HANDOFF, não insista sozinho. Não é o "Steering Loop" de
+`docs/HARNESS-FLOW.md` (aquele é retrospectiva humana entre ciclos, não
+retry dentro de uma task). Detalhes e o exemplo com `sdd-validate`: LOAD
+references/loop.md.
+
+## HANDOFF — quando transferir o controle
+
+Hoje só existe handoff **para o humano** (este framework só tem um agent,
+`@sdd` — não há handoff agente→agente ainda). Gatilhos: limite do LOOP
+atingido, conflito com `constitution.md`/`architecture.md`, contrato de
+interface a alterar, dependência não aprovada, task ambígua, observabilidade
+incompleta, ou qualquer ação potencialmente irreversível. Ao escalar, inclua
+sempre o que foi tentado, por que falhou e a evidência (ex: JSON do
+`sdd-validate`) — nunca escale só com "não funcionou, o que eu faço?".
+Detalhes completos: LOAD references/handoff.md.
+
+## Harness (guardrails) — hoje informal
+
+O que já existe como guardrail é texto que o próprio agente segue por
+disciplina, não código que bloqueia a ação: `constitution.md` imutável para
+IA e a lista de "Comportamentos proibidos" acima. Guardrails **de
+verdade** (enforced, não apenas orientação) seriam implementados como
+**Hooks** (`PreToolUse`/`PostToolUse`) — um primitivo APM que este projeto
+ainda não usa (`.apm/hooks/` não existe). Contexto conceitual completo do
+Harness como um todo (guias + sensores): LOAD docs/HARNESS-FLOW.md.
 
 Para o fluxo completo de cada etapa do ciclo, LOAD references/workflow.md.
