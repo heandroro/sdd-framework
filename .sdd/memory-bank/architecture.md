@@ -141,6 +141,29 @@ C4Container
 - Toda entrada de sistema deve gerar um trace distribuído
 - Toda operação de negócio relevante deve emitir um custom event
 - Toda exceção não tratada deve ser capturada e enviada ao Application Performance Monitor
+- **Exceção documentada**: CLIs síncronos de processo único (sem chamadas de
+  rede/downstream) não precisam de traces distribuídos — a unidade
+  observável relevante é a execução do processo inteiro, não um span. Traces
+  = N/A é aceitável **desde que documentado com justificativa** no próprio
+  `design.md` da feature (ver `tools/sdd-validate` como exemplo).
+
+### Runtime para ferramentas de CLI do framework
+
+- Ferramentas de CLI novas (não o conteúdo markdown do framework em si)
+  vivem em `tools/<nome>/`, como pacote Node.js/TypeScript autocontido
+  (`package.json` próprio, sem afetar a raiz do repositório).
+- Escolhido por ser a opção mais comum para esse tipo de ferramenta
+  (parsing estrutural, saída JSON tipada) e por não exigir runtime adicional
+  em ambientes onde agentes de IA já rodam sobre Node — decisão tomada em
+  `tools/sdd-validate` (T-IMP-01) na ausência de qualquer sinal prévio de
+  linguagem no repositório.
+- Toolchain mínimo: `typescript` como único devDependency de build, `node
+  --test` nativo como test runner (sem Jest/Vitest).
+- **Lição de portabilidade**: scripts `npm` que usam glob recursivo (`**`)
+  devem citar o padrão (`node --test 'dist/tests/**/*.test.js'`), nunca
+  deixá-lo sem aspas — `npm run` invoca o script via `sh` puro, que não
+  expande `**` recursivamente como zsh/bash com `globstar` fazem; sem aspas,
+  arquivos em subpastas são silenciosamente ignorados.
 
 ---
 
@@ -151,6 +174,7 @@ C4Container
 
 | Componente         | Responsabilidade                  | Não faz                            |
 |--------------------|-----------------------------------|------------------------------------|
+| `sdd-validate` (`tools/sdd-validate/`) | Validação estrutural de specs (`.sdd/specs/**`) — IDs únicos, seções obrigatórias, rastreabilidade REQ↔APM↔Task. Saída `--format=json` é **contrato estável** (schema em `.sdd/specs/harness-sensors/design.md`) — mudanças exigem versionamento explícito. | Validação semântica de conteúdo, auto-fix, validar artefatos fora do ciclo SDD |
 | [PREENCHER]        | [PREENCHER]                       | [PREENCHER]                        |
 
 ---

@@ -18,6 +18,22 @@ Se algum destes arquivos não existir, informe ao humano antes de prosseguir.
 
 ---
 
+## Antes de qualquer mudança: qual caminho usar?
+
+Faça a triagem de tamanho antes de escolher o workflow:
+
+- **Trivial** (typo, comentário, ajuste cosmético) → direto ao código, sem spec
+- **Pequena** (1 componente, até 2 arquivos de produção estimados, sem
+  decisão arquitetural nova, sem telemetria nova) → **Workflow JIT Spec**
+  (ver abaixo)
+- **Média ou maior** → **Workflow SDD (Spec-First)** completo (ver abaixo)
+
+> O Workflow JIT Spec **não é uma etapa** do Workflow SDD completo — é um
+> caminho alternativo e mais leve. Uma mudança segue um dos dois, nunca
+> os dois.
+
+---
+
 ## Workflow SDD (Spec-First)
 
 ### Etapa 1 — Requirements
@@ -47,6 +63,21 @@ Quando solicitado a criar/ajudar com `tasks.md`:
 4. **Sempre inclua as tasks T-DOC-01 a T-DOC-03** — elas nunca são opcionais
 5. Tasks de Application Performance Monitor devem referenciar os IDs APM-Mx / APM-Ex de `design.md`
 6. Execute o checklist ao final
+
+### Validação Automática (sdd-validate)
+
+Antes de cada gate humano (fim de `requirements.md`, `design.md` e depois de
+gerar `tasks.md`), rode o sensor computacional de specs:
+
+```
+node tools/sdd-validate/bin/sdd-validate.js
+```
+
+(ou `/validar-spec`, se o Agent Package Manager estiver instalado). Ele
+verifica IDs únicos, seções obrigatórias, T-APM-01 a T-APM-05 presentes e
+rastreabilidade `[REQ-x.x]` — determinístico, não substitui a revisão
+humana. Corrija todo finding `error` antes de apresentar a spec ao humano;
+findings `warning` não bloqueiam, mas devem ser sinalizados.
 
 ### Execução de Tasks
 
@@ -101,6 +132,41 @@ e registre os insights em `KNOWLEDGE.md → Retrospectivas de Spec`.
 
 ---
 
+## Workflow JIT Spec (alternativa ao ciclo completo — mudanças pequenas)
+
+> Isto não é uma etapa do Workflow SDD acima — é um caminho separado e
+> mais leve para mudanças pequenas. Contexto e exemplos em [JIT.md](docs/JIT.md).
+
+1. Confirme que o memory bank está inicializado — sem ele, oriente o humano a
+   inicializá-lo ou use o ciclo completo
+2. Gere um **artefato único** (≤ ~20 linhas) **derivado do memory bank**:
+   intenção (1–2 frases), critérios de aceite, componentes tocados e
+   verificação de que a telemetria APM **existente** cobre o cenário
+3. **Não pergunte ao humano o que já está no memory bank**
+4. O artefato **não contém** IDs `REQ-x`, tabelas GIVEN/WHEN/THEN, seções
+   `OBS-x` nem checklists — anti-formalismo é requisito
+5. Apresente ao humano: **gate único** — implemente somente após aprovação
+   explícita do contrato inteiro
+6. **Regra de escalada**: se qualquer critério de elegibilidade estourar
+   durante a execução, pare e proponha promoção para spec completa
+7. No fechamento: entrada no `CHANGELOG.md` obrigatória; ADR se mudou decisão
+   arquitetural; descarte o artefato JIT após o merge
+
+---
+
+## Loop de Auto-Correção
+
+Ao executar uma ação (rodar comando, editar arquivo, invocar
+`sdd-validate`), trate o resultado como observação para a próxima tentativa:
+erro → analise a causa → ajuste a estratégia → tente de novo. **Limite
+determinístico obrigatório: no máximo 3 tentativas** para o mesmo problema.
+Esgotou sem sucesso → **pare** e reporte ao humano (ver "Quando Reportar ao
+Humano (Handoff)" abaixo) — não tente uma 4ª vez "só mais uma".
+
+> Isto não é o "Steering Loop" de [HARNESS-FLOW.md](docs/HARNESS-FLOW.md)
+> (aquele é retrospectiva humana entre ciclos SDD, não retry dentro de uma
+> task) — os dois nomes descrevem mecanismos diferentes, de propósito.
+
 ## Comportamentos Proibidos
 
 - **NÃO** inclua dados PII/sensíveis em exemplos de telemetria
@@ -112,12 +178,25 @@ e registre os insights em `KNOWLEDGE.md → Retrospectivas de Spec`.
 - **NÃO** feche o ciclo de uma spec sem completar T-DOC-01 a T-DOC-03
 - **NÃO** inclua tokens/secrets literais em exemplos de `apm.yml` — sempre usar `${VAR}`
 - **NÃO** misture detalhes técnicos em `requirements.md`
+- **NÃO** inclua IDs `REQ-x`, tabelas GIVEN/WHEN/THEN, seções `OBS-x` ou checklists em um artefato JIT spec — se o formato do ciclo completo aparecer, o fluxo degenerou
+- **NÃO** continue a execução de um JIT spec cuja elegibilidade estourou — pare e proponha promoção para spec completa
+
+Estas regras são orientação seguida por disciplina — não há nenhum
+mecanismo automático (Hooks) que bloqueie a ação caso sejam violadas neste
+repositório hoje. Guardrails "de verdade" (enforced por código, não só
+texto) ficam fora do escopo atual.
 
 ---
 
-## Quando Reportar ao Humano
+## Quando Reportar ao Humano (Handoff)
+
+Handoff é a transferência **explícita** de controle para o humano — hoje a
+única forma de handoff neste framework (não há handoff agente→agente; só
+existe o fluxo direto do agente, sem múltiplas personas).
 
 Reporte **imediatamente** ao humano antes de prosseguir quando:
+- O limite do Loop de Auto-Correção foi atingido (3 tentativas sem sucesso
+  no mesmo problema — ver seção acima)
 - Houver conflito entre o spec e `constitution.md` ou `architecture.md`
 - Uma task precisar alterar um contrato de interface existente
 - Uma dependency não listada em `architecture.md` for necessária
@@ -125,6 +204,13 @@ Reporte **imediatamente** ao humano antes de prosseguir quando:
 - Um requisito de observabilidade parecer incompleto ou inconsistente
 - Um primitivo de agente (PKG-x) conflitar com primitivos já instalados por outros pacotes APM CLI
 - Um MCP server self-defined precisar ser usado transitivamente (boundary de segurança)
+- Qualquer ação potencialmente destrutiva ou irreversível fora do que já foi explicitamente aprovado para a sessão
+
+**Ao reportar, sempre inclua** (o "pacote de handoff"): o que foi tentado,
+por que falhou, a evidência relevante (ex: saída JSON do `sdd-validate`,
+mensagem de erro literal) e, se tiver, uma recomendação — deixando claro
+que é sugestão, não decisão já tomada. Nunca escale só com "não funcionou,
+o que eu faço?".
 
 ---
 
@@ -133,6 +219,7 @@ Reporte **imediatamente** ao humano antes de prosseguir quando:
 > Este workflow é **independente** do ciclo SDD. Pode ser iniciado em paralelo,
 > antes ou depois do ciclo `requirements → design → tasks`, dependendo da maturidade
 > da feature. Use `.sdd/specs/_template/agent-context.md` como template.
+> Documentação completa dos primitivos: [AGENT-PACKAGE-MANAGER.md](docs/AGENT-PACKAGE-MANAGER.md).
 
 ### Quando usar
 

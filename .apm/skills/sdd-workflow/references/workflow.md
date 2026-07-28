@@ -12,6 +12,55 @@ Se algum destes arquivos não existir, informe ao humano antes de prosseguir.
 
 ---
 
+## Fluxo JIT Spec (mudanças pequenas)
+
+> **Isto não é uma etapa do ciclo completo abaixo (Etapa 1–3)** — é um
+> caminho alternativo e mais leve. Se a mudança for pequena, o fluxo
+> termina neste bloco; não crie `requirements.md`, `design.md` ou
+> `tasks.md`. Contexto e exemplos em `docs/JIT.md`.
+
+Contrato efêmero de **artefato único**, derivado do memory bank, com **um
+único gate humano**.
+
+### Elegibilidade (avaliada antes de gerar o artefato)
+
+Todos os critérios devem valer (defaults ajustáveis por projeto):
+- Toca **1 componente**
+- Estimativa de **até 2 arquivos de produção**
+- **Nenhuma decisão arquitetural nova**
+- **Nenhuma telemetria nova** (a cobertura APM existente atende ao cenário)
+
+Violou qualquer critério antes da aprovação → recomende o ciclo completo.
+Mudança trivial (typo, cosmético) → abaixo do JIT: direto ao código, sem spec.
+
+### O que fazer
+
+1. Confirme que o memory bank está inicializado — sem ele não há JIT Spec
+2. Gere o artefato único (≤ ~20 linhas) **derivado do memory bank**: intenção
+   (1–2 frases), critérios de aceite, componentes tocados, verificação da
+   telemetria APM existente
+3. Valide com `/validar-spec` (perfil leve — sensor computacional, não substitui o gate humano)
+4. Apresente ao humano — **gate único**: o contrato inteiro é aprovado de uma vez
+5. Implemente após aprovação; a revisão seguinte é no diff final
+
+### Regras
+
+- **Anti-formalismo é requisito**: o artefato não contém IDs `REQ-x`, tabelas
+  GIVEN/WHEN/THEN, seções `OBS-x` nem checklists — se o formato do ciclo
+  completo aparecer, o fluxo degenerou em "SDD em miniatura"
+- Não pergunte ao humano informações que já estão no memory bank
+- **Regra de escalada**: se qualquer critério de elegibilidade estourar durante
+  a execução (surgiu decisão arquitetural, mais arquivos que o previsto),
+  **pare** e proponha promoção para spec completa antes de continuar
+
+### Fechamento
+
+- Entrada no `CHANGELOG.md` obrigatória
+- ADR se a mudança alterou decisão arquitetural (antes do descarte)
+- Artefato JIT descartado após o merge (spec-first)
+
+---
+
 ## Etapa 1 — Requirements (`requirements.md`)
 
 ### O que fazer

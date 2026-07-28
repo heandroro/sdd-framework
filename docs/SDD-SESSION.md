@@ -53,6 +53,43 @@ automaticamente no seu editor. Basta conversar com o agente normalmente.
 > **Agente:** Perfeito. Próximo passo: posso criar o `design.md` quando quiser.
 > Use `/revisar-spec requirements` a qualquer momento para uma revisão formal.
 
+### Exemplo de sessão — mudança pequena (JIT Spec)
+
+> **Usuário:** o retry de pagamento está dando falso negativo quando o gateway demora mais de 2s. aumenta o timeout pra 5s?
+>
+> **Agente:** *(lê o memory bank e faz a triagem)* Mudança pequena: 1 componente
+> (`payment/client.ts`), 1 arquivo, sem decisão arquitetural nova, telemetria
+> existente cobre o cenário. Elegível para **JIT Spec**:
+>
+> ```markdown
+> ## JIT Spec — corrigir timeout no retry de pagamento
+>
+> **Intenção**: aumentar o timeout do client de pagamento de 2s para 5s,
+> que está causando falsos negativos no retry.
+>
+> **Aceite**: pedidos com resposta entre 2–5s completam sem acionar retry;
+> testes de integração do módulo payment continuam verdes.
+>
+> **Toca**: `payment/client.ts` (1 componente, 1 arquivo).
+>
+> **Telemetria**: coberto pelo trace existente `payment.charge` e pela
+> métrica `payment.retry.count` — nada novo necessário.
+>
+> Elegível: ✅ 1 componente · ≤2 arquivos · sem decisão arquitetural · sem telemetria nova
+> ```
+>
+> Aprova o contrato?
+>
+> **Usuário:** aprovado
+>
+> **Agente:** *(implementa e roda os testes)* Concluído — diff pronto para revisão.
+> Adicionei a entrada `Fixed` no CHANGELOG. O artefato JIT será descartado após o merge.
+
+> **ℹ️** Se durante a execução surgir decisão arquitetural ou necessidade de
+> telemetria nova, o agente **para** e propõe promoção para spec completa
+> (regra de escalada). Mudanças triviais (typo, cosmético) ficam abaixo do
+> JIT Spec — direto ao código, sem contrato.
+
 ### Exemplo de sessão — execução de task
 
 > **Usuário:** pode começar a T-03 do rastreamento-de-entrega?

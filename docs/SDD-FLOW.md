@@ -19,7 +19,11 @@ flowchart TD
         MB1[constitution.md] --> MB2[architecture.md] --> MB3[product.md] --> MB4[apm-standards.md]
     end
 
-    MB --> SIZE{"Feature grande?<br/>+2 domínios ou<br/>+10 tasks estimadas"}
+    MB --> TRIAGE{"Tamanho do<br/>problema?"}
+
+    TRIAGE -->|"Trivial<br/>(typo, cosmético)"| DIRECT([Direto ao código<br/>sem spec])
+    TRIAGE -->|"Pequeno<br/>(1 componente, ≤2 arquivos)"| JIT["⚡ Fluxo JIT Spec<br/>(ver diagrama abaixo)"]
+    TRIAGE -->|"Médio ou maior"| SIZE{"Feature grande?<br/>+2 domínios ou<br/>+10 tasks estimadas"}
 
     SIZE -->|Sim| SPLIT["Dividir em sub-specs<br/>.sdd/specs/feature-componente/"]
     SIZE -->|Não| REQ
@@ -42,7 +46,9 @@ flowchart TD
         DES_AP -->|Aprovado ✅| TASKS
 
         TASKS["✅ tasks.md<br/>T-impl + T-APM-01..05 + T-DOC-01..03"]
-        TASKS --> TASKS_CK{"Checklist<br/>aprovado?"}
+        TASKS --> VALIDATE{"sdd-validate<br/>sem erros?"}
+        VALIDATE -->|"Não (máx. 3x,<br/>ver Loop)"| TASKS
+        VALIDATE -->|Sim| TASKS_CK{"Checklist<br/>aprovado?"}
         TASKS_CK -->|Não| TASKS
         TASKS_CK -->|Sim| TASKS_AP{"Aprovação<br/>humana"}
         TASKS_AP -->|Revisão| TASKS
@@ -70,6 +76,44 @@ flowchart TD
     RETRO -->|Não| DONE([Feature concluída])
     RUN_RETRO --> DONE
 ```
+
+---
+
+## Fluxo JIT Spec — mudanças pequenas
+
+> Alternativa **independente** ao ciclo SDD completo (Visão Geral acima) —
+> não uma etapa dele. Documentação conceitual completa: [JIT.md](JIT.md).
+> Artefatos vivem em `.jit/<nome>.md`, na raiz, fora de `.sdd/`.
+
+Contrato efêmero de artefato único, derivado do memory bank, com um único
+gate humano.
+
+```mermaid
+flowchart TD
+    START([Mudança pequena]) --> ELIG{"Elegível?<br/>1 componente · ≤2 arquivos<br/>sem decisão arquitetural nova<br/>sem telemetria nova"}
+    ELIG -->|Não| FULL["Ciclo SDD completo<br/>(ver Visão Geral)"]
+    ELIG -->|Sim| MB_OK{"Memory bank<br/>inicializado?"}
+    MB_OK -->|Não| INIT["/init-memory-bank<br/>ou ciclo completo"]
+    MB_OK -->|Sim| GEN["⚡ Gerar artefato único (≤ ~20 linhas)<br/>derivado do memory bank:<br/>intenção · aceite · componentes tocados ·<br/>telemetria existente"]
+
+    GEN --> VAL{"Sensor: perfil leve<br/>do validador"}
+    VAL -->|Problemas| GEN
+    VAL -->|OK| GATE{"Aprovação humana<br/>(gate único)"}
+    GATE -->|Revisão| GEN
+    GATE -->|Aprovado ✅| IMPL["Implementar"]
+
+    IMPL --> SCOPE{"Elegibilidade<br/>estourou?"}
+    SCOPE -->|"Sim (escalada)"| PROMOTE["Parar e promover<br/>para spec completa"]
+    PROMOTE --> FULL
+    SCOPE -->|Não| DIFF["Revisão humana<br/>do diff final"]
+
+    DIFF --> CLOSE["CHANGELOG obrigatório<br/>ADR se mudou decisão arquitetural"]
+    CLOSE --> DISCARD([Artefato JIT descartado])
+```
+
+> O artefato JIT **não contém** IDs REQ-x, tabelas GIVEN/WHEN/THEN, seções
+> OBS-x nem checklists — anti-formalismo é requisito. Se o formato do ciclo
+> completo aparecer no artefato, o fluxo degenerou em "SDD em miniatura".
 
 ---
 

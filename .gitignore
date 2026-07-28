@@ -1,0 +1,20 @@
+
+# APM dependencies
+apm_modules/
+apm.lock.yaml
+
+# Saída compilada do `apm compile` (regenerável a partir de .apm/ + apm.yml)
+.claude/
+.cursor/
+.codex/
+.opencode/
+.gemini/
+.windsurf/
+.agents/
+
+# Subpastas do copilot geradas pelo APM CLI — NÃO ignorar .github/ inteiro,
+# pois workflows de CI e outros arquivos legítimos também vivem lá.
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
+.github/agents/
