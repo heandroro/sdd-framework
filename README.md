@@ -505,6 +505,9 @@ derivado diretamente dos commits semânticos:
 - [SDD-SESSION.md](docs/SDD-SESSION.md) — Exemplos de sessão para cada etapa do ciclo SDD
 - [HARNESS-FLOW.md](docs/HARNESS-FLOW.md) — SDD Framework pela lente de Harness Engineering: guias, sensores e steering loop
 - [HARNESS-SESSION.md](docs/HARNESS-SESSION.md) — Exemplos de sessão mostrando guias e sensores do harness em ação
+- [SKILL-ARCHITECTURE.md](docs/SKILL-ARCHITECTURE.md) — Visão geral dos 4 quadrantes da capacidade do agente (SDD, Harness, Loop, Handoff)
+- [LOOP.md](docs/LOOP.md) — Ciclo interno de auto-correção do agente (ação → observação → ajuste), com limite determinístico
+- [HANDOFF.md](docs/HANDOFF.md) — Transferência explícita de controle: gatilhos, pacote de handoff e o que ainda não é aplicável
 - [Spec-Driven Development — Birgitta Böckeler (martinfowler.com)](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
 - [GitHub spec-kit](https://github.com/github/spec-kit)
 - [Kiro](https://kiro.dev/)

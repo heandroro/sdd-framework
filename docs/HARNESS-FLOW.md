@@ -49,7 +49,7 @@ flowchart LR
         S1["Revisão Humana\naprovação entre etapas"]
         S2["Checklists de Etapa\nconformidade antes do gate"]
         S3["revisar-spec\nrevisão de spec sob demanda"]
-        S4["sdd-validate ← novo\nsensor computacional de spec"]
+        S4["sdd-validate\nsensor computacional de spec"]
         S5["Retrospectiva\nKNOWLEDGE.md"]
     end
 
@@ -86,7 +86,7 @@ flowchart LR
 | Checklists de etapa | Inferencial (leve) | Verificação de completude antes de cada gate |
 | Retrospectiva → `KNOWLEDGE.md` | Inferencial | Loop de melhoria do harness após cada ciclo |
 | Req. de observabilidade (`OBS-x` → `APM-Mx/Ex`) | Inferencial | Especifica sensores de runtime para o produto |
-| `sdd-validate` *(em construção)* | **Computacional** | Valida estrutura de specs automaticamente |
+| `sdd-validate` | **Computacional** | Valida estrutura de specs automaticamente |
 | T-APM-01..05 (tasks obrigatórias) | Computacional (no produto) | Implementa os sensores de runtime no código entregue |
 
 ---
@@ -177,24 +177,27 @@ harnessability de qualquer repositório via:
 | **Legibilidade** | Memory bank estruturado — agente sempre sabe o contexto do projeto |
 | **Navegabilidade** | Specs em `.sdd/specs/<feature>/` com estrutura previsível |
 | **Tratabilidade** | Checklists e gates humanos que impedem avanço com spec incompleta |
-| **Detectabilidade** | `sdd-validate` como sensor computacional (em construção) |
+| **Detectabilidade** | `sdd-validate` como sensor computacional |
 
 ---
 
 ## Lacuna Atual e Próximo Passo
 
 O SDD Framework é **majoritariamente feedforward e inferencial** — forte em guias,
-ainda limitado em sensores computacionais. Isso é esperado para um *harness de spec*,
-mas a lacuna é reconhecida:
+ainda limitado em sensores computacionais. Isso é esperado para um *harness de spec*.
+O primeiro sensor computacional (`sdd-validate`) já foi entregue, mas a cobertura
+computacional ainda se limita à estrutura de specs — a lacuna mais ampla (sensores
+computacionais em outras dimensões do harness) segue em aberto:
 
 ```
 Guias (feedforward) ████████████████████ forte
 Sensores inferenciais ████████████░░░░░░░░ moderado (manual/sob demanda)
-Sensores computacionais ████░░░░░░░░░░░░░░░░ em construção → sdd-validate
+Sensores computacionais ████████░░░░░░░░░░░░ sdd-validate implementado — cobertura limitada a specs
 ```
 
-O spec [harness-sensors](../.sdd/specs/harness-sensors/tasks.md) endereça essa lacuna
-adicionando o primeiro sensor computacional do framework.
+O spec [harness-sensors](../.sdd/specs/harness-sensors/tasks.md) endereçou essa lacuna
+adicionando o primeiro sensor computacional do framework — próximos sensores
+computacionais (fora do escopo de validação de specs) ficam como trabalho futuro.
 
 ---
 
@@ -203,4 +206,7 @@ adicionando o primeiro sensor computacional do framework.
 - [Harness Engineering for Coding Agent Users](https://martinfowler.com/articles/harness-engineering.html) — Birgitta Böckeler, Abr/2026
 - [SDD-FLOW.md](SDD-FLOW.md) — Diagramas do ciclo SDD completo
 - [NIVEL-SDD.md](NIVEL-SDD.md) — Análise comparativa dos três níveis de SDD
+- [SKILL-ARCHITECTURE.md](SKILL-ARCHITECTURE.md) — Visão geral dos 4 quadrantes da capacidade do agente (SDD, Harness, Loop, Handoff)
+- [LOOP.md](LOOP.md) — Ciclo interno de auto-correção do agente, distinto do Steering Loop acima
+- [HANDOFF.md](HANDOFF.md) — Transferência explícita de controle para o humano
 - [.sdd/specs/harness-sensors/](../.sdd/specs/harness-sensors/tasks.md) — Spec de implementação do `sdd-validate`
