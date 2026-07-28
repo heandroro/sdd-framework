@@ -115,6 +115,12 @@ flowchart LR
 
 ## O Loop de Direção (Steering Loop)
 
+> Não confundir com o **LOOP** da skill `sdd-workflow` (`.apm/skills/sdd-workflow/references/loop.md`)
+> — este Steering Loop é retrospectiva **humana** entre ciclos SDD; aquele
+> é o ciclo interno ação→observação→ajuste do agente, dentro de uma única
+> task, com limite de 3 tentativas. Dois mecanismos diferentes, mesma
+> palavra "loop" — decisão de nomenclatura registrada em `KNOWLEDGE.md`.
+
 O humano **direciona** o harness iterando sobre ele sempre que um problema
 recorre. Cada ciclo SDD melhora os guias e sensores para o próximo:
 
@@ -123,7 +129,7 @@ flowchart TD
     PROB["Problema recorre\n(spec mal formada, task sem REQ,\nT-APM esquecida)"]
     RETRO["Retrospectiva\n9 perguntas → KNOWLEDGE.md"]
     UPDATE["Atualizar o Harness\nguia ou sensor?"]
-    GUIDE_UP["Melhorar Guia\n(ex: reforçar regra no AGENTS.md,\natualizar skill sdd-workflow)"]
+    GUIDE_UP["Melhorar Guia\n(ex: reforçar regra no AGENTS.md,\natualizar um dos 4 quadrantes da\nskill sdd-workflow)"]
     SENSOR_UP["Melhorar Sensor\n(ex: nova regra no sdd-validate,\nnovo item no checklist)"]
     NEXT["Próximo ciclo SDD\ncom harness mais forte"]
 

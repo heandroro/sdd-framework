@@ -46,7 +46,9 @@ flowchart TD
         DES_AP -->|Aprovado ✅| TASKS
 
         TASKS["✅ tasks.md<br/>T-impl + T-APM-01..05 + T-DOC-01..03"]
-        TASKS --> TASKS_CK{"Checklist<br/>aprovado?"}
+        TASKS --> VALIDATE{"sdd-validate<br/>sem erros?"}
+        VALIDATE -->|"Não (máx. 3x,<br/>ver Loop)"| TASKS
+        VALIDATE -->|Sim| TASKS_CK{"Checklist<br/>aprovado?"}
         TASKS_CK -->|Não| TASKS
         TASKS_CK -->|Sim| TASKS_AP{"Aprovação<br/>humana"}
         TASKS_AP -->|Revisão| TASKS

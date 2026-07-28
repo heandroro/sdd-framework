@@ -104,6 +104,7 @@ Este framework é uma estrutura **agnóstica de tecnologia** para praticar SDD c
 | **Ciclo SDD** | Templates e fluxo para requirements → design → tasks com aprovação humana | `.sdd/specs/` |
 | **JIT Spec** | Contrato efêmero de artefato único para mudanças pequenas, com um único gate humano — independente do ciclo SDD | `.jit/` |
 | **Observabilidade obrigatória** | Cada spec define explicitamente métricas, traces, alertas e dashboards | Seções APM-x em `design.md` |
+| **Sensor computacional (`sdd-validate`)** | CLI que valida estrutura de specs (IDs únicos, seções obrigatórias, rastreabilidade REQ↔APM↔Task) antes da revisão humana | `tools/sdd-validate/` |
 | **Agent Package Manager (APM CLI)** | Ciclo independente para empacotar instruções, prompts e skills para o agente | `.apm/` + `apm.yml` |
 
 ---
