@@ -2,12 +2,6 @@
   "hooks": {
     "PreToolUse": [
       {
-        "tool": "write_file",
-        "condition": "filepath contains '.sdd/memory-bank/constitution.md'",
-        "action": "block",
-        "message": "constitution.md é imutável para a IA — princípios só podem ser alterados diretamente pelo humano. Peça para o humano fazer essa edição."
-      },
-      {
         "tool": "edit_file",
         "condition": "filepath contains '.sdd/memory-bank/constitution.md'",
         "action": "block",

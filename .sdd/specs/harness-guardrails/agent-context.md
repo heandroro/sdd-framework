@@ -76,12 +76,6 @@ tentativa/observação/ajuste (3 rodadas, dentro do limite do LOOP — ver
   "hooks": {
     "PreToolUse": [
       {
-        "tool": "write_file",
-        "condition": "filepath contains '.sdd/memory-bank/constitution.md'",
-        "action": "block",
-        "message": "constitution.md é imutável para a IA — princípios só podem ser alterados diretamente pelo humano. Peça para o humano fazer essa edição."
-      },
-      {
         "tool": "edit_file",
         "condition": "filepath contains '.sdd/memory-bank/constitution.md'",
         "action": "block",
@@ -92,8 +86,17 @@ tentativa/observação/ajuste (3 rodadas, dentro do limite do LOOP — ver
 }
 ```
 
-Duas entradas (`write_file` e `edit_file`) por incerteza sobre se um único
-nome de tool cobre os dois casos — mais seguro cobrir ambos.
+> **Correção pós-entrega (2026-07-28)**: a primeira versão também bloqueava
+> `write_file`. Isso quebrava `/init-memory-bank.prompt.md`, que usa
+> `Write` para **criar** `constitution.md` do zero num projeto novo
+> (copiando o conteúdo padrão sem alteração) — a condição
+> `filepath contains X` não distingue "criar" de "sobrescrever", então o
+> bloqueio pegava os dois casos. Removida a entrada `write_file`: `Edit`
+> (a ferramenta que ficou bloqueada) exige que o arquivo já exista para
+> funcionar — nunca pode ser usada para criar, então bloqueá-la é sempre
+> seguro. Trade-off aceito: uma sobrescrita completa via `Write` depois de
+> o arquivo já existir não é mais bloqueada pelo hook, só pela instruction
+> existente (orientação, não enforcement).
 
 > **Risco não resolvido**: o JSON acima compilou sem erro para
 > `.claude/settings.json`, mas o formato nativo real de hooks do Claude
