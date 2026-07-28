@@ -113,8 +113,9 @@ Hoje só existe handoff **para o humano** (este framework só tem um agent,
 atingido, conflito com `constitution.md`/`architecture.md`, contrato de
 interface a alterar, dependência não aprovada, task ambígua, observabilidade
 incompleta, ou qualquer ação potencialmente irreversível. Ao escalar, inclua
-sempre o que foi tentado, por que falhou e a evidência (ex: JSON do
-`sdd-validate`) — nunca escale só com "não funcionou, o que eu faço?".
+sempre o que foi tentado, por que falhou, a evidência (ex: JSON do
+`sdd-validate`) e, se tiver, uma recomendação — nunca escale só com "não
+funcionou, o que eu faço?".
 Detalhes completos: LOAD references/handoff.md.
 
 ## Harness (guardrails) — hoje informal

@@ -204,6 +204,7 @@ Reporte **imediatamente** ao humano antes de prosseguir quando:
 - Um requisito de observabilidade parecer incompleto ou inconsistente
 - Um primitivo de agente (PKG-x) conflitar com primitivos já instalados por outros pacotes APM CLI
 - Um MCP server self-defined precisar ser usado transitivamente (boundary de segurança)
+- Qualquer ação potencialmente destrutiva ou irreversível fora do que já foi explicitamente aprovado para a sessão
 
 **Ao reportar, sempre inclua** (o "pacote de handoff"): o que foi tentado,
 por que falhou, a evidência relevante (ex: saída JSON do `sdd-validate`,

@@ -72,9 +72,14 @@
     comportamentos proibidos) — não o mesmo "Harness" guarda-chuva que
     `docs/HARNESS-FLOW.md` usa para o framework inteiro (guias + sensores).
     Guardrails *enforced* de verdade (não apenas orientação que o agente
-    pode ignorar) mapeiam para **Hooks**, um primitivo APM ainda não usado
-    neste repo (`.apm/hooks/` não existe) — ficou fora de escopo.
-  - **Handoff** (transferência explícita de controle) só cobre humano→IA
+    pode ignorar) mapeiam para **Hooks**, um primitivo APM que na época
+    desta decisão ainda não era usado neste repo — ficou fora de escopo.
+    Atualização (2026-07-28): o primeiro Hook do projeto foi adicionado
+    (`.apm/hooks/proteger-constitution.json`, bloqueia escrita direta em
+    `constitution.md`) — ver `.sdd/specs/harness-guardrails/agent-context.md`.
+    Guardrail funcional real (o hook bloqueando de fato no Claude Code)
+    ainda pendente de teste manual pelo humano.
+  - **Handoff** (transferência explícita de controle) só cobre IA→humano
     hoje — handoff agente→agente não é aplicável enquanto só existir o
     agent `@sdd`; documentado como capacidade futura, não construído.
 
@@ -89,6 +94,7 @@
 | 2026-07-16 | Fechamento da spec `jit-spec` | JIT Spec é uma **alternativa independente** ao ciclo SDD, não um componente dele — nunca aninhar sua documentação ou seu armazenamento dentro de `.sdd/`. Artefatos efêmeros vivem em `.jit/<nome>.md`, na raiz, como namespace de primeiro nível próprio (paralelo a `.apm/` e `.sdd/`). A spec `.sdd/specs/jit-spec/` foi descartada após esta promoção — a entrega real está em `docs/JIT.md`, `AGENTS.md`, `SKILL.md` e `references/workflow.md`. |
 | 2026-07-27 | Implementação da spec `harness-sensors` (`sdd-validate`) | Primeira ferramenta de CLI do framework — decidido que código executável vive em `tools/<nome>/` (pacote Node/TS autocontido), nunca na raiz do repositório (que é 100% documentação). Runtime Node.js/TypeScript escolhido por T-IMP-01 na ausência de qualquer sinal prévio de linguagem no repo. Ver `architecture.md` → "Runtime para ferramentas de CLI do framework" para o registro completo. |
 | 2026-07-27 | T-DOC-03 de `harness-sensors` (verificar `product.md`) | `product.md` está totalmente não inicializado ([PREENCHER] em toda seção) — decidido **não** preencher unilateralmente (persona/KPI de produto é decisão do humano, não do agente). T-DOC-03 fica pendente até uma inicialização de memory bank (`/init-memory-bank`) tratar `product.md` como um todo. |
+| 2026-07-28 | Primeiro Hook do projeto (`harness-guardrails`, protege `constitution.md`) | Nem `docs/AGENT-PACKAGE-MANAGER.md` (mostrava lista) nem `.sdd/specs/_template/agent-context.md` (mostrava script) descreviam o schema real de Hooks aceito pelo `apm install` — descoberto por tentativa/observação/ajuste: `{"hooks": {"<Evento>": [ {entradas} ] } }` (dict com o evento como chave, valor é lista, sem campo `type` redundante dentro de cada entrada). Registrar aqui para a próxima sessão não repetir a mesma investigação. Bloqueio funcional real (Claude Code de fato interpretando o schema compilado) ainda não confirmado — "compila sem erro" não é prova de enforcement; teste manual pendente. |
 
 ---
 
